@@ -75,7 +75,7 @@ config("compiler") {
 
   if (msc_full_ver >= 190000000) {
     cflags += [
-      # Work around a bug in VS 2015 RTM compiler.
+      # Work around crbug.com/526851, a bug in VS 2015 RTM compiler.
       # https://connect.microsoft.com/VisualStudio/feedback/details/1737411/compiler-creates-references-to-global-delete-which-are-satisfied-by-pseudo-random-object-files
       # https://connect.microsoft.com/VisualStudio/feedback/details/1379741/-global-delete-function-is-inconsistently-generated
       "/Zc:sizedDealloc-",
@@ -83,6 +83,10 @@ config("compiler") {
   }
 
   if (is_clang) {
+    # Required to make the 19041 SDK compatible with clang-cl.
+    # See https://crbug.com/1089996 issue #2 for details.
+    cflags += [ "/D__WRL_ENABLE_FUNCTION_STATICS__" ]
+
     # Don't look for includes in %INCLUDE%.
     cflags += [ "/X" ]
 
@@ -90,9 +94,17 @@ config("compiler") {
     cflags += [ "-fmsc-version=" + msc_ver ]
 
     if (current_cpu == "x86") {
-      cflags += [ "-m32" ]
+      if (host_cpu == "x86" || host_cpu == "x64") {
+        cflags += [ "-m32" ]
+      } else {
+        cflags += [ "--target=i386-windows" ]
+      }
     } else if (current_cpu == "x64") {
-      cflags += [ "-m64" ]
+      if (host_cpu == "x86" || host_cpu == "x64") {
+        cflags += [ "-m64" ]
+      } else {
+        cflags += [ "--target=x86_64-windows" ]
+      }
     } else if (current_cpu == "arm64") {
       cflags += [ "--target=arm64-windows" ]
     } else {
@@ -101,6 +113,15 @@ config("compiler") {
 
     # Clang runtime libraries, such as the sanitizer runtimes, live here.
     lib_dirs = [ "$clang_base_path/lib/clang/$win_clang_version/lib/windows" ]
+  }
+
+  # SIMD level
+  if (current_cpu == "x86" || current_cpu == "x64") {
+    if (is_clang) {
+      cflags += [ "-msse2" ]
+    } else {
+      cflags += [ "/arch:SSE2", ]
+    }
   }
 
   if (use_lld && !use_thin_lto && is_clang) {
@@ -171,20 +192,39 @@ config("vs_code_analysis") {
 # :runtime_library vs. :compiler.
 config("runtime_library") {
   cflags = []
+  cflags_cc = []
 
   # Defines that set up the CRT.
-  defines = [ "_CRT_SECURE_NO_DEPRECATE" ]
+  defines = [
+    "__STD_C",
+    "_CRT_RAND_S",
+    "_CRT_SECURE_NO_DEPRECATE",
+    # "_CRT_SECURE_NO_WARNINGS",
+    "_SCL_SECURE_NO_DEPRECATE",
+  ]
 
   # Defines that set up the Windows SDK.
   defines += [
     "WIN32",
+    "_WIN32",
+    "PSAPI_VERSION=1",
     "_SECURE_ATL",
   ]
+
+  if (current_cpu == "x64" || current_cpu == "arm64") {
+    defines += [
+      "WIN64",
+      "_WIN64",
+    ]
+  }
 
   if (!use_vs_code_analysis) {
     # This is required for ATL to use XP-safe versions of its functions.
     # However it is prohibited when using /analyze
-    defines += [ "_USING_V110_SDK71_" ]
+    defines += [
+      "_USING_V110_SDK71_",
+      "_ATL_XP_TARGETING",
+    ]
   }
 
   if (current_os == "winuwp") {
@@ -232,6 +272,19 @@ config("runtime_library") {
     # When not targeting Windows Runtime, make sure the WINAPI family is set
     # to desktop.
     defines += [ "WINAPI_FAMILY=WINAPI_FAMILY_DESKTOP_APP" ]
+    libs = [
+      "advapi32.lib",
+      "comdlg32.lib",
+      "dbghelp.lib",
+      "gdi32.lib",
+      "oleaut32.lib",
+      "psapi.lib",
+      "shell32.lib",
+      "shlwapi.lib",
+      "user32.lib",
+      "uuid.lib",
+      "version.lib",
+    ]
   }
 }
 
@@ -239,9 +292,11 @@ config("runtime_library") {
 # targets need to manually override it for their compiles.
 config("winver") {
   defines = [
-    "NTDDI_VERSION=0x0A000000",
-    "_WIN32_WINNT=0x0A00",
-    "WINVER=0x0A00",
+    "WINVER=0x0501",
+    "_WIN32_WINNT=0x0501",
+    "_WIN64_WINNT=0x0502",
+    "_WIN32_IE=0x0600",
+    # "NTDDI_VERSION=0x0A000000",
   ]
 }
 
@@ -285,6 +340,13 @@ config("common_linker_setup") {
     "/NXCOMPAT",
     "/DYNAMICBASE",
   ]
+
+  if (is_official_build) {
+    ldflags += [
+      "/OPT:REF",
+      "/OPT:ICF",
+    ]
+  }
 
   # Tell the linker to crash on failures.
   if (msc_full_ver >= 190000000) {
@@ -346,19 +408,33 @@ config("static_crt") {
 # Subsystem --------------------------------------------------------------------
 
 # This is appended to the subsystem to specify a minimum version.
+# The number after the comma is the minimum required OS version.
 if (current_cpu == "x64") {
-  # The number after the comma is the minimum required OS version.
-  # 5.02 = Windows Server 2003.
+  # 5.02 = Windows Server 2003/XP x64.
   subsystem_version_suffix = ",5.02"
+} else if (current_cpu == "arm") {
+  # Windows ARM32 requires Windows 8.
+  subsystem_version_suffix = ",6.02"
+} else if (current_cpu == "arm64") {
+  # Windows ARM64 requires Windows 10.
+  subsystem_version_suffix = ",10.0"
 } else {
-  # 5.01 = Windows XP.
+  # 5.01 = Windows XP, for x86 32 bit builds.
   subsystem_version_suffix = ",5.01"
 }
 
 config("console") {
+  defines = [
+    "CONSOLE",
+    "_CONSOLE",
+  ]
   ldflags = [ "/SUBSYSTEM:CONSOLE$subsystem_version_suffix" ]
 }
 config("windowed") {
+  defines = [
+    "WINDOWS",
+    "_WINDOWS",
+  ]
   ldflags = [ "/SUBSYSTEM:WINDOWS$subsystem_version_suffix" ]
 }
 
@@ -409,7 +485,7 @@ config("unicode") {
 
 # Some third party code might not compile with WIN32_LEAN_AND_MEAN so we have
 # to have a separate config for it. Remove this config from your target to
-# get the "bloaty and accomodating" version of windows.h.
+# get the "bloaty and accommodating" version of windows.h.
 config("lean_and_mean") {
   defines = [ "WIN32_LEAN_AND_MEAN" ]
 }

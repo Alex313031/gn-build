@@ -1,0 +1,55 @@
+# Copyright 2014 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+group("gn_all") {
+  deps = [
+    ":hello_all",
+    ":twinmain",
+  ]
+  deps += [
+    "//src/test/:hello",
+    "//src/test/:hello_shared",
+    "//src/test/:hello_static",
+  ]
+}
+
+group("hello_all") {
+  if (is_win) {
+    if (is_clang) {
+      deps = [
+        "//src/test/:hello(//build/toolchain/win:clang_x64)",
+        "//src/test/:hello(//build/toolchain/win:clang_x86)",
+      ]
+    } else {
+      deps = [
+        "//src/test/:hello(//build/toolchain/win:x64)",
+        "//src/test/:hello(//build/toolchain/win:x86)",
+      ]
+    }
+  } else if (is_posix && !is_android && !is_linux && !is_mac) {
+    if (is_clang) {
+      deps = [
+        "//src/test/:hello(//build/toolchain/posix:clang_x64)",
+        "//src/test/:hello(//build/toolchain/posix:clang_x86)",
+      ]
+    } else {
+      deps = [
+        "//src/test/:hello(//build/toolchain/posix:x64)",
+        "//src/test/:hello(//build/toolchain/posix:x86)",
+      ]
+    }
+  }
+}
+
+executable("twinmain") {
+  # Ensure this isn't compiled as a cmdline app
+  if (is_console_app) {
+    configs -= [ "//build/config/win:console", ]
+    configs += [ "//build/config/win:windowed", ]
+  }
+  sources = [
+    "//src/winapp.cc",
+    "//src/winapp.h",
+  ]
+}

@@ -147,7 +147,7 @@ declare_args() {
   external = "//external"
 
   # Project-wide C++ standard to use.
-  cpp_standard = 20
+  cpp_standard = 17
 
   # DON'T ADD MORE FLAGS HERE. Read the comment above.
 }
@@ -272,6 +272,12 @@ is_freebsd = current_os == "freebsd"
 is_apple = is_ios || is_mac
 is_posix = !is_win && !is_fuchsia
 
+declare_args() {
+  # If true, builds as a console app (rather than a windowed app), which allows
+  # logging to be printed to the user.
+  is_console_app = is_linux
+}
+
 # =============================================================================
 # TARGET DEFAULTS
 # =============================================================================
@@ -309,13 +315,18 @@ default_compiler_configs = [
 ]
 if (is_win) {
   default_compiler_configs += [
+    "//build/config/win:unicode",
     "//build/config/win:utf8",
     "//build/config/win:default_crt",
-    "//build/config/win:lean_and_mean",
     "//build/config/win:nominmax",
     "//build/config/win:winver",
     "//build/config/win:vs_code_analysis",
   ]
+  if (is_console_app) {
+    default_compiler_configs += [
+      "//build/config/win:lean_and_mean",
+    ]
+  }
 }
 
 if (is_android) {
@@ -344,13 +355,21 @@ if (is_win) {
   # Windows linker setup for EXEs and DLLs.
   # Many targets remove these configs, so they are not contained within
   # //build/config:executable_config for easy removal.
-  _linker_configs = [
-    "//build/config/win:default_incremental_linking",
+  _linker_configs = [ "//build/config/win:default_incremental_linking", ]
 
-    # Default to console-mode apps. Most of our targets are tests and such
-    # that shouldn't use the windows subsystem.
-    "//build/config/win:console",
-  ]
+  if (is_console_app) {
+    _linker_configs += [
+      # Console-mode apps. For targets are tests that run in conhost.exe
+      # and shouldn't use the windows subsystem.
+      "//build/config/win:console",
+    ]
+  } else {
+    _linker_configs += [
+      # Console-mode apps. For targets are tests that run in conhost.exe
+      # and shouldn't use the windows subsystem.
+      "//build/config/win:windowed",
+    ]
+  }
 } else if (is_mac || is_ios) {
   _linker_configs = [ "//build/config/mac:strip_all" ]
 } else if (is_android || is_linux || is_freebsd) {

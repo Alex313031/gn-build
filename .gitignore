@@ -2,3 +2,25 @@
 /.idea
 /__pycache__
 *.pyc
+
+# OS Stuff
+.DS_Store
+.eslintcache
+.directory
+Thumbs.db
+
+# MSVS Stuff
+*.vcxproj.user
+*.tlog
+*.vs/
+/.vs/
+
+# Output directories
+/out*
+/src/out*
+/release/
+
+# Built Files
+*.obj
+*.pdb
+*.stamp

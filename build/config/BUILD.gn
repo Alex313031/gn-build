@@ -1310,7 +1310,11 @@ if (is_ios || is_mac) {
 # Debug/release ----------------------------------------------------------------
 
 config("debug") {
-  defines = [ "_DEBUG" ]
+  defines = [
+    "DEBUG",
+    "_DEBUG",
+    "DCHECK=1",
+  ]
 
   if (is_win) {
     if (!enable_iterator_debugging) {
@@ -1325,7 +1329,11 @@ config("debug") {
 }
 
 config("release") {
-  defines = [ "NDEBUG" ]
+  defines = [
+    "NDEBUG",
+    "_NDEBUG",
+    "DCHECK=0",
+  ]
 }
 
 # Default libraries ------------------------------------------------------------
