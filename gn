@@ -4,4 +4,4 @@
 
 export HERE=${PWD}
 
-export $HERE/tools/linux/gn $@
+$HERE/tools/linux/gn $@
