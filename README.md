@@ -1,6 +1,9 @@
 # //build directory for GN-based projects
 
-This project provides a work-in-progress standalone version of the toolchains and configs used by the Chromium project.
+This project provides a work-in-progress standalone version of the toolchains and configs used by the Chromium project, to be used as a boilerplate build system and toolchain combo
+to make cross platform C/C++ development easier.
+
+This fork was made to support my personal Win32 projects.
 
 ## Supported platforms
 
@@ -11,15 +14,14 @@ The toolchains have been tested on the following platforms:
 * Linux (GCC 6, Clang 3.8)
 * OS X (Xcode 7.3.1)
 
-The [testsrc](https://github.com/timniederhausen/gn-build/tree/testsrc)
-branch contains the test/example project used by the CI tests.
-
 ## Reference
 
 ### Basic variables
 
 All variables described here are build args and can be overridden in the user's
 `args.gn` file.
+
+See a full list of the currently available args here > [args.list](args.list).
 
 #### [`//build/config/BUILDCONFIG.gn`](config/BUILDCONFIG.gn)
 
