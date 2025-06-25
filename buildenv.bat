@@ -1,20 +1,17 @@
+REM Copyright (c) 2025 Alex313031
+
 @ECHO OFF
 
-SET CWD=%CD%
+SET CWD=%~dp0
 ECHO %CWD%
 
-SET TOOLSDIR=%CD%\tools\win
+SET TOOLSDIR=%CWD%\tools\win
 ECHO %TOOLSDIR%
 
-SET TOOLSDIR=%CD%\tools\win
-ECHO %TOOLSDIR%
-
-SET LLVMDIR=%CD%\tools\win\llvm_18.1.8_win64
+SET LLVMDIR=%CWD%\tools\win\llvm_18.1.8_win64
 ECHO %LLVMDIR%
 
 SET PATH=%PATH%;%TOOLSDIR%;%LLVMDIR%;
-ECHO %PATH%
-ECHO %TMP%
 
 PAUSE
 

@@ -4,52 +4,9 @@
 
 group("gn_all") {
   deps = [
-    ":hello_all",
-    ":twinmain",
+    "//src/test/:hello_all",
   ]
-  deps += [
-    "//src/test/:hello",
-    "//src/test/:hello_shared",
-    "//src/test/:hello_static",
-  ]
-}
-
-group("hello_all") {
   if (is_win) {
-    if (is_clang) {
-      deps = [
-        "//src/test/:hello(//build/toolchain/win:clang_x64)",
-        "//src/test/:hello(//build/toolchain/win:clang_x86)",
-      ]
-    } else {
-      deps = [
-        "//src/test/:hello(//build/toolchain/win:x64)",
-        "//src/test/:hello(//build/toolchain/win:x86)",
-      ]
-    }
-  } else if (is_posix && !is_android && !is_linux && !is_mac) {
-    if (is_clang) {
-      deps = [
-        "//src/test/:hello(//build/toolchain/posix:clang_x64)",
-        "//src/test/:hello(//build/toolchain/posix:clang_x86)",
-      ]
-    } else {
-      deps = [
-        "//src/test/:hello(//build/toolchain/posix:x64)",
-        "//src/test/:hello(//build/toolchain/posix:x86)",
-      ]
-    }
+    deps += [ "//src/test/:twinmain", ]
   }
-}
-
-executable("twinmain") {
-  # Ensure this isn't compiled as a cmdline app
-  if (is_console_app) {
-    configs -= [ "//build/config/win:console", ]
-    configs += [ "//build/config/win:windowed", ]
-  }
-  sources = [
-    "//src/winapp.cc",
-    "//src/winapp.h",
-  ]
 }

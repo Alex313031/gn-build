@@ -4,11 +4,13 @@
 
 import("//build/config/precompiled_header.gni")
 
+# Ensure precompiled headers work
 precompiled_header("hello_pch") {
   precompiled_header = "precompile.h"
   precompiled_source = "precompile.cc"
 }
 
+# Ensure commandline Windows and Linux programs work
 executable("hello") {
   sources = [
     "hello.cc",
@@ -40,6 +42,7 @@ executable("hello") {
   ]
 }
 
+# Test that .so, .dll, and .dylib files can be built
 shared_library("hello_shared") {
   sources = [
     "hello_shared.cc",
@@ -49,9 +52,51 @@ shared_library("hello_shared") {
   defines = [ "HELLO_SHARED_IMPLEMENTATION" ]
 }
 
+# Make sure that .a and .lib files can be built
 static_library("hello_static") {
   sources = [
     "hello_static.cc",
     "hello_static.h",
   ]
+}
+
+# Minimal Windowed app for testing compiler flags
+executable("twinmain") {
+  # Ensure this isn't compiled as a cmdline app
+  if (is_console_app) {
+    configs -= [ "//build/config/win:console", ]
+    configs += [ "//build/config/win:windowed", ]
+  }
+  sources = [
+    "//src/winapp.cc",
+    "//src/winapp.h",
+  ]
+}
+
+group("hello_all") {
+  if (is_win) {
+    if (is_clang) {
+      deps = [
+        ":hello(//build/toolchain/win:clang_x64)",
+        ":hello(//build/toolchain/win:clang_x86)",
+      ]
+    } else {
+      deps = [
+        ":hello(//build/toolchain/win:x64)",
+        ":hello(//build/toolchain/win:x86)",
+      ]
+    }
+  } else if (is_posix && !is_android && !is_linux && !is_mac) {
+    if (is_clang) {
+      deps = [
+        ":hello(//build/toolchain/posix:clang_x64)",
+        ":hello(//build/toolchain/posix:clang_x86)",
+      ]
+    } else {
+      deps = [
+        ":hello(//build/toolchain/posix:x64)",
+        ":hello(//build/toolchain/posix:x86)",
+      ]
+    }
+  }
 }
