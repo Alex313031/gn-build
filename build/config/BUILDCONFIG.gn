@@ -272,12 +272,6 @@ is_freebsd = current_os == "freebsd"
 is_apple = is_ios || is_mac
 is_posix = !is_win && !is_fuchsia
 
-declare_args() {
-  # If true, builds as a console app (rather than a windowed app), which allows
-  # logging to be printed to the user.
-  is_console_app = is_linux
-}
-
 # =============================================================================
 # TARGET DEFAULTS
 # =============================================================================
@@ -322,11 +316,6 @@ if (is_win) {
     "//build/config/win:winver",
     "//build/config/win:vs_code_analysis",
   ]
-  if (is_console_app) {
-    default_compiler_configs += [
-      "//build/config/win:lean_and_mean",
-    ]
-  }
 }
 
 if (is_android) {
@@ -357,19 +346,13 @@ if (is_win) {
   # //build/config:executable_config for easy removal.
   _linker_configs = [ "//build/config/win:default_incremental_linking", ]
 
-  if (is_console_app) {
-    _linker_configs += [
-      # Console-mode apps. For targets are tests that run in conhost.exe
-      # and shouldn't use the windows subsystem.
-      "//build/config/win:console",
-    ]
-  } else {
-    _linker_configs += [
-      # Console-mode apps. For targets are tests that run in conhost.exe
-      # and shouldn't use the windows subsystem.
-      "//build/config/win:windowed",
-    ]
-  }
+  # Default to console-mode apps. Most of our targets are tests and such
+  # that shouldn't use the windows subsystem.
+  # GUI Apps should remove this config and add the
+  # "//build/config/win:windowed" config.
+  _linker_configs += [
+    "//build/config/win:console",
+  ]
 } else if (is_mac || is_ios) {
   _linker_configs = [ "//build/config/mac:strip_all" ]
 } else if (is_android || is_linux || is_freebsd) {
@@ -396,6 +379,9 @@ default_shared_library_configs = default_compiler_configs + [
 
 set_defaults("shared_library") {
   configs = default_shared_library_configs
+
+  # Always build as component
+  defines = [ "COMPONENT_BUILD" ]
 }
 
 set_defaults("loadable_module") {
