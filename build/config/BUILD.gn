@@ -992,7 +992,7 @@ if (is_win) {
       # Specifically tell the linker to perform optimizations.
       # See http://lwn.net/Articles/192624/ .
       # -O2 enables string tail merge optimization in gold and lld.
-      "-Wl,-O2",
+      "-Wl,-O3",
       "-Wl,--gc-sections",
     ]
   }
@@ -1069,6 +1069,10 @@ config("optimize_max") {
     # Favor speed over size, /O2 must be before the common flags. The GYP
     # build also specifies /Ot, /Oi, and /GF, but these are implied by /O2.
     cflags = [ "/O2" ] + common_optimize_on_cflags
+    if (is_clang) {
+      # Use actual -O3 like GCC!
+      cflags += [ "/clang:-O3" ]
+    }
   } else {
     cflags = [ "-O3" ] + common_optimize_on_cflags
   }

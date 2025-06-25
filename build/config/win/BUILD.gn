@@ -87,6 +87,9 @@ config("compiler") {
     # See https://crbug.com/1089996 issue #2 for details.
     cflags += [ "/D__WRL_ENABLE_FUNCTION_STATICS__" ]
 
+    # Don't warn about Microsoft specific header stuff
+    cflags += [ "-Wno-microsoft-include", ]
+
     # Don't look for includes in %INCLUDE%.
     cflags += [ "/X" ]
 
