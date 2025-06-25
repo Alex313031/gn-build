@@ -106,6 +106,17 @@ declare_args() {
   extra_ldflags = ""
 }
 
+declare_args() {
+  # Component build. Setting to true compiles targets declared as "components"
+  # as shared libraries loaded dynamically. This speeds up development time.
+  # When false, components will be linked statically.
+  #
+  # For more information see
+  # https://chromium.googlesource.com/chromium/src/+/main/docs/component_build.md
+  is_component_build =
+      is_debug && current_os != "ios"
+}
+
 if (is_win && !is_clang) {
   assert(!use_incremental_ltcg || msc_ver >= 1900,
          "/LTCG:INCREMENTAL is only available on VS 2015+")
@@ -128,6 +139,10 @@ config("compiler") {
   ldflags = []
   defines = []
   configs = []
+
+  if (is_component_build) {
+    defines += [ "COMPONENT_BUILD", ]
+  }
 
   # System-specific flags. If your compiler flags apply to one of the
   # categories here, add it to the associated file to keep this shared config
