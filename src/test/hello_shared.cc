@@ -4,6 +4,6 @@
 
 #include "hello_shared.h"
 
-const char* GetSharedText() {
-  return "world";
+const wchar_t* GetSharedText() {
+  return L"world";
 }

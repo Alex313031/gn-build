@@ -2,12 +2,13 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#include <cwchar>
 #include <stdio.h>
 
-#include "hello_shared.h"
+#include "hello.h"
 #include "hello_static.h"
 
-int main(int argc, char* argv[]) {
-  printf("%s, %s\n", GetStaticText(), GetSharedText());
+int main(int argc, char *argv[], char *envp[]) {
+  wprintf(L"%s, %s\n", GetStaticText(), GetSharedText());
   return 0;
 }

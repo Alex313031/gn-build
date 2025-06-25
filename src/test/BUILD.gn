@@ -14,9 +14,13 @@ precompiled_header("hello_pch") {
 executable("hello") {
   sources = [
     "hello.cc",
+    "hello.h",
   ]
 
   if (is_win) {
+    configs += [
+      "//build/config/win:lean_and_mean",
+    ]
     if (current_cpu == "x64") {
       sources += [
         "win64_asm_hello.asm",
@@ -28,13 +32,9 @@ executable("hello") {
     }
   }
 
-  configs += [ ":hello_pch" ]
-
-  # Ensure this is compiled as a cmdline app
-  if (!is_console_app) {
-    configs -= [ "//build/config/win:windowed", ]
-    configs += [ "//build/config/win:console", ]
-  }
+  configs += [
+    ":hello_pch",
+  ]
 
   deps = [
     ":hello_shared",
@@ -47,9 +47,8 @@ shared_library("hello_shared") {
   sources = [
     "hello_shared.cc",
     "hello_shared.h",
+    "component_export.h",
   ]
-
-  defines = [ "HELLO_SHARED_IMPLEMENTATION" ]
 }
 
 # Make sure that .a and .lib files can be built
