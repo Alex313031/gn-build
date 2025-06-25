@@ -3,10 +3,24 @@
 # found in the LICENSE file.
 
 group("gn_all") {
+  testonly = true
+
+  deps = [ ":tests", ]
+
+  deps += [
+    # Place your deps tree to your code here
+    # so that GN knows about it!
+  ]
+}
+
+group("tests") {
+  testonly = true
+
   deps = [
     "//src/test/:hello_all",
   ]
+
   if (is_win) {
-    deps += [ "//src/test/:twinmain", ]
+    deps += [ "//src/test/defapp/:defapp", ]
   }
 }

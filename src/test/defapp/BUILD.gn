@@ -1,0 +1,22 @@
+# MSVS GUI Default GUI App
+# A minimal Windowed app for testing compiler flags
+executable("defapp") {
+  # Ensure this isn't compiled as a cmdline app
+  if (is_console_app) {
+    configs -= [ "//build/config/win:console", ]
+    configs += [ "//build/config/win:windowed", ]
+  }
+
+  deps = [ ":defapp_sources" ]
+}
+
+source_set("defapp_sources") {
+  sources = [
+    "resource.h",
+    "targetver.h",
+    "framework.h",
+    "defapp.rc",
+    "defapp.cc",
+    "defapp.h",
+  ]
+}

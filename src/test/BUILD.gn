@@ -60,19 +60,6 @@ static_library("hello_static") {
   ]
 }
 
-# Minimal Windowed app for testing compiler flags
-executable("twinmain") {
-  # Ensure this isn't compiled as a cmdline app
-  if (is_console_app) {
-    configs -= [ "//build/config/win:console", ]
-    configs += [ "//build/config/win:windowed", ]
-  }
-  sources = [
-    "winapp.cc",
-    "winapp.h",
-  ]
-}
-
 group("hello_all") {
   if (is_win) {
     if (is_clang) {
