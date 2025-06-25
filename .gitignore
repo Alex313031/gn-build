@@ -24,3 +24,6 @@ Thumbs.db
 *.obj
 *.pdb
 *.stamp
+
+# LLVM Toolchain
+/tools/llvm/

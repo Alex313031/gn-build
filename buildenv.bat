@@ -1,18 +1,13 @@
-REM Copyright (c) 2025 Alex313031
+:: Copyright (c) 2025 Alex313031
 
 @ECHO OFF
 
 SET CWD=%~dp0
-ECHO %CWD%
 
 SET TOOLSDIR=%CWD%\tools\win
-ECHO %TOOLSDIR%
 
 SET LLVMDIR=%CWD%\tools\win\llvm_18.1.8_win64
-ECHO %LLVMDIR%
 
 SET PATH=%PATH%;%TOOLSDIR%;%LLVMDIR%;
-
-PAUSE
 
 CMD.EXE /K

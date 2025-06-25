@@ -1,4 +1,4 @@
-REM Copyright (c) 2025 Alex313031
+:: Copyright (c) 2025 Alex313031
 
 @ECHO OFF
 
