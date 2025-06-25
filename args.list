@@ -1,0 +1,633 @@
+# List of possible arguments:
+
+action_pool_depth
+    Current value (from the default) = 0
+      From //build/toolchain/BUILD.gn:9
+
+    Pool for action tasks.
+
+archive_seed_corpus
+    Current value (from the default) = true
+      From //build/config/sanitizers/sanitizers.gni:109
+
+    When true, seed corpora archives are built.
+
+auto_profile_path
+    Current value (from the default) = ""
+      From //build/config/BUILD.gn:69
+
+    AFDO (Automatic Feedback Directed Optimizer) is a form of profile-guided
+    optimization that GCC supports. It used by ChromeOS in their official
+    builds. To use it, set auto_profile_path to the path to a file containing
+    the needed gcov profiling data.
+
+cached_toolchain_data
+    Current value (from the default) = ""
+      From //build/toolchain/win/settings.gni:31
+
+    Allows us to avoid multiple toolchain.py invocations for multi-toolchain builds.
+
+clang_base_path
+    Current value (from the default) = ""
+      From //build/toolchain/clang.gni:10
+
+    The path of your Clang installation folder (without /bin).
+
+clang_msc_ver
+    Current value (from the default) = 0
+      From //build/toolchain/win/settings.gni:28
+
+    Microsoft compiler version number clang-cl will report in _MSC_VER
+    (Defaults to the default version associated with the chosen VS version.)
+
+clang_version
+    Current value (from the default) = 0
+      From //build/toolchain/compiler_version.gni:28
+
+    Version of the Clang compiler.
+    Auto-detection is toolchain-specific and happens only if Clang is the
+    active compiler.
+    Format: MAJOR * 10000 + MINOR * 100 + PATCHLEVEL
+
+concurrent_links
+    Current value (from the default) = 0
+      From //build/toolchain/concurrent_links.gni:15
+
+    Limit the number of concurrent links; we often want to run fewer
+    links at once than we do compiles, because linking is memory-intensive.
+    The default to use varies by platform and by the amount of memory
+    available, so we call out to a script to get the right value.
+
+cpp_standard
+    Current value (from the default) = 17
+      From //build/config/BUILDCONFIG.gn:150
+
+    Project-wide C++ standard to use.
+
+current_cpu
+    Current value (from the default) = ""
+      (Internally set; try `gn help current_cpu`.)
+
+current_os
+    Current value (from the default) = ""
+      (Internally set; try `gn help current_os`.)
+
+custom_toolchain
+    Current value (from the default) = ""
+      From //build/config/BUILDCONFIG.gn:138
+
+    Allows the path to a custom target toolchain to be injected as a single
+    argument, and set as the default toolchain.
+
+disable_libfuzzer
+    Current value (from the default) = false
+      From //build/config/sanitizers/sanitizers.gni:91
+
+    Helper variable for testing builds with disabled libfuzzer.
+    Not for client use.
+
+disable_llvm_ml
+    Current value (from the default) = false
+      From //build/toolchain/win/BUILD.gn:30
+
+    Some files cannot be assembled by llvm-ml yet, so provide an option to disable it
+    see: https://sourceforge.net/p/sevenzip/discussion/45797/thread/768932e9dd/?limit=25#0d6c
+
+disable_precompiled_headers
+    Current value (from the default) = false
+      From //build/config/precompiled_header.gni:2
+
+enable_full_stack_frames_for_profiling
+    Current value (from the default) = false
+      From //build/config/BUILD.gn:38
+
+    Compile in such a way as to make it possible for the profiler to unwind full
+    stack frames. Setting this flag has a large effect on the performance of the
+    generated code than just setting profiling, but gives the profiler more
+    information to analyze.
+    Requires profiling to be set to true.
+
+enable_iterator_debugging
+    Current value (from the default) = false
+      From //build/config/BUILD.gn:49
+
+    When set (the default) enables C++ iterator debugging in debug builds.
+    Iterator debugging is always off in release builds (technically, this flag
+    affects the "debug" config, which is always available but applied by
+    default only in debug builds).
+   
+    Iterator debugging is generally useful for catching bugs. But it can
+    introduce extra locking to check the state of an iterator against the state
+    of the current object. For iterator- and thread-heavy code, this can
+    significantly slow execution.
+
+enable_lto
+    Current value (from the default) = false
+      From //build/config/compiler.gni:15
+
+    Enable Link Time Optimization in optimized builds (output programs run
+    faster, but linking is up to 5-20x slower).
+
+enable_profiling
+    Current value (from the default) = false
+      From //build/config/compiler.gni:11
+
+    Compile in such a way as to enable profiling of the generated code. For
+    example, don't omit the frame pointer and leave in symbols.
+
+enable_stack_protection
+    Current value (from the default) = true
+      From //build/config/BUILD.gn:77
+
+    Control stack protection guards. There should be no need to disable this.
+    Note: Only honored on POSIX systems.
+
+exclude_unwind_tables
+    Current value (from the default) = false
+      From //build/config/BUILD.gn:56
+
+    Omit unwind support in official builds to save space.
+    We can use breakpad for these builds.
+
+external
+    Current value (from the default) = "//external"
+      From //build/config/BUILDCONFIG.gn:147
+
+    Label of the external projects directory.
+    By convention, all 3rd-party projects should end up in this directory, so they
+    can depend on each other (e.g. $external/mysql_connector -> $external/zlib)
+
+extra_asmflags
+    Current value (from the default) = ""
+      From //build/config/BUILD.gn:82
+
+    Optional list containing extra assembler arguments.
+    Like 'asmflags' this value is passed to all tools that take
+    an .asm or .S input.
+
+extra_cflags
+    Current value (from the default) = ""
+      From //build/config/BUILD.gn:87
+
+    Optional list containing extra compiler arguments.
+    Like 'cflags' this value is passed to the C, C++, Objective C, and
+    Objective C++ compilers.
+
+extra_cflags_c
+    Current value (from the default) = ""
+      From //build/config/BUILD.gn:91
+
+    Optional list containing extra compiler arguments.
+    Like 'cflags_c' this value is only passed to the C compiler.
+
+extra_cflags_cc
+    Current value (from the default) = ""
+      From //build/config/BUILD.gn:95
+
+    Optional list containing extra compiler arguments.
+    Like 'cflags_cc' this value is only passed to the C++ compiler.
+
+extra_cflags_objc
+    Current value (from the default) = ""
+      From //build/config/BUILD.gn:99
+
+    Optional list containing extra compiler arguments.
+    Like 'cflags_objc' this value is only passed to the Objective C compiler.
+
+extra_cflags_objcc
+    Current value (from the default) = ""
+      From //build/config/BUILD.gn:103
+
+    Optional list containing extra compiler arguments.
+    Like 'cflags_objcc' this value is only passed to the Objective C++ compiler.
+
+extra_ldflags
+    Current value (from the default) = ""
+      From //build/config/BUILD.gn:106
+
+    Optional list containing extra linker arguments.
+
+fatal_linker_warnings
+    Current value (from the default) = true
+      From //build/config/BUILD.gn:63
+
+    Enable fatal linker warnings.
+
+gcc_version
+    Current value (from the default) = 0
+      From //build/toolchain/compiler_version.gni:22
+
+    Version of the GCC compiler.
+    Auto-detection is toolchain-specific and happens only if GCC is the active
+    compiler.
+    Format: MAJOR * 10000 + MINOR * 100 + PATCHLEVEL
+
+gdb_index
+    Current value (from the default) = false
+      From //build/config/BUILD.gn:60
+
+    If true, gold linker will save symbol table inside object files.
+    This speeds up gdb startup by 60%
+
+gold_path
+    Current value (from the default) = ""
+      From //build/config/BUILD.gn:52
+
+    When we are going to use gold we need to find it.
+
+host_cpu
+    Current value (from the default) = "x64"
+      (Internally set; try `gn help host_cpu`.)
+
+host_os
+    Current value (from the default) = "win"
+      (Internally set; try `gn help host_os`.)
+
+host_toolchain
+    Current value (from the default) = ""
+      From //build/config/BUILDCONFIG.gn:142
+
+    This should not normally be set as a build argument.  It's here so that
+    every toolchain can pass through the "global" value via toolchain_args().
+
+is_asan
+    Current value (from the default) = false
+      From //build/config/sanitizers/sanitizers.gni:7
+
+    Compile for Address Sanitizer to find memory bugs.
+
+is_cfi
+    Current value (from the default) = false
+      From //build/config/sanitizers/sanitizers.gni:49
+
+    Compile with Control Flow Integrity to protect virtual calls and casts.
+    See http://clang.llvm.org/docs/ControlFlowIntegrity.html
+
+is_clang
+    Current value (from the default) = false
+      From //build/config/BUILDCONFIG.gn:134
+
+    Set to true when compiling with the Clang compiler.
+
+is_component_build
+    Current value (from the default) = true
+      From //build/config/BUILD.gn:117
+
+is_debug
+    Current value (from the default) = true
+      From //build/config/BUILDCONFIG.gn:157
+
+    Debug build. Enabling official builds automatically sets is_debug to false.
+
+is_hwasan
+    Current value (from the default) = false
+      From //build/config/sanitizers/sanitizers.gni:12
+
+    Compile for Hardware-Assisted Address Sanitizer to find memory bugs
+    (android/arm64 only).
+    See http://clang.llvm.org/docs/HardwareAssistedAddressSanitizerDesign.html
+
+is_lsan
+    Current value (from the default) = false
+      From //build/config/sanitizers/sanitizers.gni:15
+
+    Compile for Leak Sanitizer to find leaks.
+
+is_msan
+    Current value (from the default) = false
+      From //build/config/sanitizers/sanitizers.gni:18
+
+    Compile for Memory Sanitizer to find uninitialized reads.
+
+is_official_build
+    Current value (from the default) = false
+      From //build/config/BUILDCONFIG.gn:131
+
+    Set to enable the official build level of optimization. This has nothing
+    to do with branding, but enables an additional level of optimization above
+    release (!is_debug). This might be better expressed as a tri-state
+    (debug, release, official) but for historical reasons there are two
+    separate flags.
+
+is_syzyasan
+    Current value (from the default) = false
+      From //build/config/sanitizers/sanitizers.gni:45
+
+    Enable building with SyzyAsan which can find certain types of memory
+    errors. Only works on Windows. See
+    https://github.com/google/syzygy/wiki/SyzyASanHowTo
+
+is_tsan
+    Current value (from the default) = false
+      From //build/config/sanitizers/sanitizers.gni:21
+
+    Compile for Thread Sanitizer to find threading bugs.
+
+is_ubsan
+    Current value (from the default) = false
+      From //build/config/sanitizers/sanitizers.gni:25
+
+    Compile for Undefined Behaviour Sanitizer to find various types of
+    undefined behaviour (excludes vptr checks).
+
+is_ubsan_no_recover
+    Current value (from the default) = false
+      From //build/config/sanitizers/sanitizers.gni:28
+
+    Halt the program if a problem is detected.
+
+is_ubsan_null
+    Current value (from the default) = false
+      From //build/config/sanitizers/sanitizers.gni:31
+
+    Compile for Undefined Behaviour Sanitizer's null pointer checks.
+
+is_ubsan_security
+    Current value (from the default) = false
+      From //build/config/sanitizers/sanitizers.gni:83
+
+    Enables core ubsan security features. Will later be removed once it matches
+    is_ubsan.
+
+is_ubsan_vptr
+    Current value (from the default) = false
+      From //build/config/sanitizers/sanitizers.gni:114
+
+    Compile for Undefined Behaviour Sanitizer's vptr checks.
+
+is_win_fastlink
+    Current value (from the default) = false
+      From //build/config/compiler.gni:38
+
+    Tell VS to create a PDB that references information in .obj files rather
+    than copying it all. This should improve linker performance. mspdbcmf.exe
+    can be used to convert a fastlink pdb to a normal one.
+
+linkrepro_root_dir
+    Current value (from the default) = ""
+      From //build/toolchain/win/BUILD.gn:26
+
+    Root directory that will store the MSVC link repro. This should only be
+    used for debugging purposes on the builders where a MSVC linker flakyness
+    has been observed. The targets for which a link repro should be generated
+    should add somethink like this to their configuration:
+      if (linkrepro_root_dir != "") {
+        ldflags = ["/LINKREPRO:" + linkrepro_root_dir + "/" + target_name]
+      }
+   
+    Note that doing a link repro uses a lot of disk space and slows down the
+    build, so this shouldn't be enabled on too many targets.
+   
+    See crbug.com/669854.
+
+msan_track_origins
+    Current value (from the default) = 2
+      From //build/config/sanitizers/sanitizers.gni:36
+
+    Track where uninitialized memory originates from. From fastest to slowest:
+    0 - no tracking, 1 - track only the initial allocation site, 2 - track the
+    chain of stores leading from allocation site to use site.
+
+optimize_debug
+    Current value (from the default) = false
+      From //build/config/compiler.gni:18
+
+    Enable some optimizations that don't interfere with debugging.
+
+optimize_for_fuzzing
+    Current value (from the default) = false
+      From //build/config/BUILD.gn:73
+
+    Optimize for coverage guided fuzzing (balance between speed and number of
+    branches). Can be also used to remove non-determinism and other issues.
+
+sanitizer_coverage_flags
+    Current value (from the default) = ""
+      From //build/config/sanitizers/sanitizers.gni:101
+
+    Value for -fsanitize-coverage flag. Setting this causes
+    use_sanitizer_coverage to be enabled.
+    This flag is not used for libFuzzer (use_libfuzzer=true). Instead, we use:
+        -fsanitize=fuzzer-no-link
+    Default value when unset and use_fuzzing_engine=true:
+        trace-pc-guard
+    Default value when unset and use_sanitizer_coverage=true:
+        trace-pc-guard,indirect-calls
+
+symbol_level
+    Current value (from the default) = 2
+      From //build/toolchain/toolchain.gni:14
+
+    How many symbols to include in the build. This affects the performance of
+    the build since the symbols are large and dealing with them is slow.
+      2 means regular build with symbols.
+      1 means minimal symbols, usually enough for backtraces only.
+      0 means no symbols.
+
+target_cpu
+    Current value (from the default) = ""
+      (Internally set; try `gn help target_cpu`.)
+
+target_os
+    Current value (from the default) = ""
+      (Internally set; try `gn help target_os`.)
+
+target_winuwp_family
+    Current value (from the default) = "app"
+      From //build/config/win/BUILD.gn:32
+
+    possible values:
+      "app" - Windows Store Applications
+      "phone" - Windows Phone Applications
+      "system" - Windows Drivers and Tools
+      "server" - Windows Server Applications
+      "desktop" - Windows Desktop Applications
+
+target_winuwp_version
+    Current value (from the default) = "10"
+      From //build/config/win/BUILD.gn:24
+
+    possible values for target_winuwp_version:
+      "10" - Windows UWP 10
+      "8.1" - Windows RT 8.1
+      "8.0" - Windows RT 8.0
+
+use_afl
+    Current value (from the default) = false
+      From //build/config/sanitizers/sanitizers.gni:76
+
+    Compile for fuzzing with AFL.
+
+use_cfi_cast
+    Current value (from the default) = false
+      From //build/config/sanitizers/sanitizers.gni:61
+
+    Enable checks for bad casts: derived cast and unrelated cast.
+    TODO(krasin): remove this, when we're ready to add these checks by default.
+    https://crbug.com/626794
+
+use_cfi_diag
+    Current value (from the default) = false
+      From //build/config/sanitizers/sanitizers.gni:65
+
+    By default, Control Flow Integrity will crash the program if it detects a
+    violation. Set this to true to print detailed diagnostics instead.
+
+use_cfi_icall
+    Current value (from the default) = false
+      From //build/config/sanitizers/sanitizers.gni:56
+
+    Enable checks for indirect function calls via a function pointer.
+    TODO(pcc): remove this when we're ready to add these checks by default.
+    https://crbug.com/701919
+   
+    TODO(crbug.com/1159424): Reassess the validity of the next expression.
+
+use_cfi_recover
+    Current value (from the default) = false
+      From //build/config/sanitizers/sanitizers.gni:69
+
+    Let Control Flow Integrity continue execution instead of crashing when
+    printing diagnostics (use_cfi_diag = true).
+
+use_clang_static_analyzer
+    Current value (from the default) = false
+      From //build/toolchain/clang_static_analyzer.gni:10
+
+    Uses the Clang static analysis tools during compilation.
+
+use_debug_fission
+    Current value (from the default) = false
+      From //build/config/compiler.gni:30
+
+    use_debug_fission: whether to use split DWARF debug info
+    files. This can reduce link time significantly, but is incompatible
+    with some utilities such as icecc and ccache. Requires gold and
+    gcc >= 4.8 or clang.
+    http://gcc.gnu.org/wiki/DebugFission
+   
+    This is a placeholder value indicating that the code below should set
+    the default.  This is necessary to delay the evaluation of the default
+    value expression until after its input values such as use_gold have
+    been set, e.g. by a toolchain_args() block.
+
+use_drfuzz
+    Current value (from the default) = false
+      From //build/config/sanitizers/sanitizers.gni:87
+
+    Compile for fuzzing with Dr. Fuzz
+    See http://www.chromium.org/developers/testing/dr-fuzz
+
+use_external_fuzzing_engine
+    Current value (from the default) = false
+      From //build/config/sanitizers/sanitizers.gni:79
+
+    Compile for fuzzing with an external engine (e.g., Grammarinator).
+
+use_gold
+    Current value (from the default) = false
+      From //build/config/compiler.gni:33
+
+    Whether to use the gold linker from binutils instead of lld or bfd.
+
+use_incremental_ltcg
+    Current value (from the default) = false
+      From //build/config/BUILD.gn:31
+
+    Whether or not we should turn on incremental LTCG. Only affects the VS
+    Windows build.
+
+use_libfuzzer
+    Current value (from the default) = false
+      From //build/config/sanitizers/sanitizers.gni:73
+
+    Compile for fuzzing with LLVM LibFuzzer.
+    See http://www.chromium.org/developers/testing/libfuzzer
+
+use_lld
+    Current value (from the default) = false
+      From //build/toolchain/clang.gni:13
+
+    Set to true to use lld, the LLVM linker.
+
+use_locally_built_instrumented_libraries
+    Current value (from the default) = false
+      From //build/config/sanitizers/sanitizers.gni:40
+
+    Use dynamic libraries instrumented by one of the sanitizers instead of the
+    standard system libraries. Set this flag to build the libraries from source.
+
+use_sanitizer_configs_without_instrumentation
+    Current value (from the default) = false
+      From //build/config/sanitizers/sanitizers.gni:106
+
+    When enabled, only relevant sanitizer defines are set, but compilation
+    happens with no extra flags. This is useful when in component build
+    enabling sanitizers only in some of the components.
+
+use_sanitizer_coverage
+    Current value (from the default) = false
+      From //build/config/sanitizers/sanitizers.gni:156
+
+    Enable -fsanitize-coverage.
+
+use_thin_lto
+    Current value (from the default) = false
+      From //build/toolchain/clang.gni:20
+
+    Enables the experimental support of ThinLTO that links 3x-10x faster but
+    (as of now) does not have all the important optimizations such us
+    devirtualization implemented. See also
+    http://blog.llvm.org/2016/06/thinlto-scalable-and-incremental-lto.html
+    TODO(tim): Supported on Windows?
+
+use_vs_code_analysis
+    Current value (from the default) = false
+      From //build/config/win/BUILD.gn:18
+
+    Set this to true to enable static analysis through Visual Studio's
+    /analyze. This dramatically slows compiles and reports thousands of
+    warnings, so normally this is done on a build machine and only the new
+    warnings are examined.
+
+visual_studio_path
+    Current value (from the default) = ""
+      From //build/toolchain/win/settings.gni:19
+
+    The path of your MSVC installation.
+   
+    If this is set you must set visual_studio_version as well.
+    Autodetected based on visual_studio_version.
+
+visual_studio_version
+    Current value (from the default) = "latest"
+      From //build/toolchain/win/settings.gni:13
+
+    Desired version of Visual Studio.
+    If visual_studio_path is set, this must be
+    the version of the VS installation at the visual_studio_path.
+   
+    Use "2013" for Visual Studio 2013 or "latest" for automatically
+    choosing the highest version (visual_studio_path must be unset in
+    this case).
+
+win_compiler_timing
+    Current value (from the default) = false
+      From //build/config/win/BUILD.gn:38
+
+    Turn this on to have the compiler output extra timing information.
+
+win_linker_timing
+    Current value (from the default) = false
+      From //build/config/win/BUILD.gn:35
+
+    Turn this on to have the linker output extra timing information.
+
+windows_sdk_version
+    Current value (from the default) = "default"
+      From //build/toolchain/win/settings.gni:24
+
+    Windows SDK version to use.
+    Can either be a full Windows 10 SDK number (e.g. 10.0.10240.0),
+    "8.1" for the Windows 8.1 SDK or "default" to use the VS default version.
+
