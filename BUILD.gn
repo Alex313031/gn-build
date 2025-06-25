@@ -21,6 +21,16 @@ group("tests") {
   ]
 
   if (is_win) {
-    deps += [ "//src/test/defapp/:defapp", ]
+    if (is_clang) {
+      deps += [
+        "//src/test/defapp/:defapp(//build/toolchain/win:clang_x64)",
+        "//src/test/defapp/:defapp(//build/toolchain/win:clang_x86)",
+      ]
+    } else {
+      deps += [
+        "//src/test/defapp/:defapp(//build/toolchain/win:x64)",
+        "//src/test/defapp/:defapp(//build/toolchain/win:x86)",
+      ]
+    }
   }
 }
