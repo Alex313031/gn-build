@@ -433,6 +433,7 @@ config("console") {
   ]
   ldflags = [ "/SUBSYSTEM:CONSOLE$subsystem_version_suffix" ]
 }
+
 config("windowed") {
   defines = [
     "WINDOWS",

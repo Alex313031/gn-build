@@ -10,7 +10,7 @@ declare_args() {
   clang_base_path = ""
 
   # Set to true to use lld, the LLVM linker.
-  use_lld = false
+  use_lld = is_clang
 
   # Enables the experimental support of ThinLTO that links 3x-10x faster but
   # (as of now) does not have all the important optimizations such us
@@ -23,4 +23,8 @@ declare_args() {
 if (is_win && is_clang) {
   assert(clang_base_path != "",
          "You must set clang_base_path when using Clang on Windows")
+}
+
+if (use_lld) {
+  assert(is_clang, "use_lld cannot be true when is_clang = false")
 }
