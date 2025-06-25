@@ -68,8 +68,8 @@ executable("twinmain") {
     configs += [ "//build/config/win:windowed", ]
   }
   sources = [
-    ":winapp.cc",
-    ":winapp.h",
+    "winapp.cc",
+    "winapp.h",
   ]
 }
 
