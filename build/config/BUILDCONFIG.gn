@@ -149,6 +149,10 @@ declare_args() {
   # Project-wide C++ standard to use.
   cpp_standard = 17
 
+  # Whether to tweak compiler flags and defines to support
+  # Windows NT 5.x
+  is_winxp_build = false
+
   # DON'T ADD MORE FLAGS HERE. Read the comment above.
 }
 

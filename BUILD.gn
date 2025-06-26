@@ -10,6 +10,7 @@ group("gn_all") {
   deps += [
     # Place your deps tree to your code here
     # so that GN knows about it!
+    # "//src:taskmgr",
   ]
 }
 

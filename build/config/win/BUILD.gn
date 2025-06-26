@@ -280,6 +280,9 @@ config("runtime_library") {
       "comdlg32.lib",
       "dbghelp.lib",
       "gdi32.lib",
+      "htmlhelp.lib",
+      "mpr.lib",
+      "ntdll.lib",
       "oleaut32.lib",
       "psapi.lib",
       "shell32.lib",
@@ -287,6 +290,7 @@ config("runtime_library") {
       "user32.lib",
       "uuid.lib",
       "version.lib",
+      "vdmdbg.lib",
     ]
   }
 }
@@ -299,8 +303,10 @@ config("winver") {
     "_WIN32_WINNT=0x0501",
     "_WIN64_WINNT=0x0502",
     "_WIN32_IE=0x0600",
-    # "NTDDI_VERSION=0x0A000000",
   ]
+  if (!is_winxp_build) {
+    # "NTDDI_VERSION=0x06010000",
+  }
 }
 
 # Linker flags for Windows SDK setup, this is applied only to EXEs and DLLs.
