@@ -206,11 +206,20 @@ config("runtime_library") {
     "_SCL_SECURE_NO_DEPRECATE",
   ]
 
+  # Default PSAPI version
+  psapi_version = 2
+
+  if (is_winxp_build) {
+    psapi_version = 1
+  } else {
+    psapi_version = 2
+  }
+
   # Defines that set up the Windows SDK.
   defines += [
     "WIN32",
     "_WIN32",
-    "PSAPI_VERSION=1",
+    "PSAPI_VERSION=$psapi_version",
     "_SECURE_ATL",
   ]
 
@@ -221,7 +230,7 @@ config("runtime_library") {
     ]
   }
 
-  if (!use_vs_code_analysis) {
+  if (!use_vs_code_analysis || is_winxp_build) {
     # This is required for ATL to use XP-safe versions of its functions.
     # However it is prohibited when using /analyze
     defines += [
@@ -277,20 +286,23 @@ config("runtime_library") {
     defines += [ "WINAPI_FAMILY=WINAPI_FAMILY_DESKTOP_APP" ]
     libs = [
       "advapi32.lib",
+      "comctl32.lib",
       "comdlg32.lib",
       "dbghelp.lib",
+      "dwmapi.lib",
       "gdi32.lib",
       "htmlhelp.lib",
       "mpr.lib",
       "ntdll.lib",
+      "ole32.lib",
       "oleaut32.lib",
       "psapi.lib",
+      "secur32.lib",
       "shell32.lib",
       "shlwapi.lib",
       "user32.lib",
       "uuid.lib",
-      "version.lib",
-      "vdmdbg.lib",
+      "version.lib"
     ]
   }
 }
@@ -302,7 +314,7 @@ config("winver") {
     "WINVER=0x0501",
     "_WIN32_WINNT=0x0501",
     "_WIN64_WINNT=0x0502",
-    "_WIN32_IE=0x0600",
+    "_WIN32_IE=0x0601",
   ]
   if (!is_winxp_build) {
     # "NTDDI_VERSION=0x06010000",
