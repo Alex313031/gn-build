@@ -204,6 +204,7 @@ config("runtime_library") {
     "_CRT_SECURE_NO_DEPRECATE",
     # "_CRT_SECURE_NO_WARNINGS",
     "_SCL_SECURE_NO_DEPRECATE",
+    "_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH",
   ]
 
   # Default PSAPI version
