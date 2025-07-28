@@ -1,0 +1,236 @@
+## Flags used to control compiler/linker flags and defines
+## to support older versions of Windows.
+
+# Windows SDK version number constants, for use in args
+# for targeting older versions of Windows
+
+# WINNT version constants used for WINVER, _WIN32_WINNT, and _WIN64_WINNT defines
+_WIN32_WINNT_NT4          = "0x0400" # Windows NT 4.0
+_WIN32_WINNT_WIN2K        = "0x0500" # Windows 2000
+_WIN32_WINNT_WINXP        = "0x0501" # Windows XP
+_WIN32_WINNT_WS03         = "0x0502" # Windows Server 2003
+_WIN32_WINNT_WIN6         = "0x0600" # Windows Vista
+_WIN32_WINNT_LONGHORN     = "0x0600" # Windows Longhorn
+_WIN32_WINNT_VISTA        = "0x0600" # Windows Vista
+_WIN32_WINNT_WS08         = "0x0600" # Windows Server 2008
+_WIN32_WINNT_WIN7         = "0x0601" # Windows 7
+_WIN32_WINNT_WIN8         = "0x0602" # Windows 8
+_WIN32_WINNT_WINBLUE      = "0x0603" # Windows 8.1
+_WIN32_WINNT_WINTHRESHOLD = "0x0A00" # Windows 10
+_WIN32_WINNT_WIN10        = "0x0A00" # Windows 10
+_WIN32_WINNT_WIN11        = _WIN32_WINNT_WIN10 # Windows 11
+
+# _WIN32_IE_ version constants used for _WIN32_IE and the section below
+_WIN32_IE_IE10    = "0x0100" # Internet Explorer 1.0
+_WIN32_IE_IE20    = "0x0200" # I.E. 2.0 (Minimum recognized by any compiler)
+_WIN32_IE_IE30    = "0x0300" # I.E. 3.00 / 3.01
+_WIN32_IE_IE302   = "0x0302" # I.E. 3.02
+_WIN32_IE_IE40    = "0x0400" # I.E. 4.00
+_WIN32_IE_IE401   = "0x0401" # I.E. 4.01 / 4.02
+_WIN32_IE_IE50    = "0x0500" # I.E. 5.00
+_WIN32_IE_IE501   = "0x0501" # I.E. 5.01 (Legacy common controls minimum target)
+_WIN32_IE_IE55    = "0x0550" # I.E. 5.50 / 5.51 (For Windows ME/2000)
+_WIN32_IE_IE60    = "0x0600" # I.E. 6.00 (Minimum recognized by MSVC)
+_WIN32_IE_IE60SP1 = "0x0601" # I.E. 6.01 (SP1) (Modern common controls minimum target)
+_WIN32_IE_IE602   = "0x0602" # I.E. 6.02 (SP1) (Only released bundled with Server 2003)
+_WIN32_IE_IE60SP2 = "0x0603" # I.E. 6.02 (SP2
+_WIN32_IE_IE70    = "0x0700" # I.E. 7.0
+_WIN32_IE_IE80    = "0x0800" # I.E. 8.0
+_WIN32_IE_IE90    = "0x0900" # I.E. 9.0
+_WIN32_IE_IE100   = "0x0A00" # I.E. 10.0
+_WIN32_IE_IE110   = "0x0A00" # I.E. 11.0 # Final release, still bundled until Windows 10.
+
+# Mappings of Windows versions to Internet Explorer versions included in a given release.
+# Used for _WIN32_IE in GN files.
+_WIN32_IE_NT4      = _WIN32_IE_IE20
+_WIN32_IE_NT4SP1   = _WIN32_IE_IE20
+_WIN32_IE_NT4SP2   = _WIN32_IE_IE20
+_WIN32_IE_NT4SP3   = _WIN32_IE_IE302
+_WIN32_IE_NT4SP4   = _WIN32_IE_IE401
+_WIN32_IE_NT4SP5   = _WIN32_IE_IE401
+_WIN32_IE_NT4SP6   = _WIN32_IE_IE50
+_WIN32_IE_WIN98    = _WIN32_IE_IE401
+_WIN32_IE_WIN98SE  = _WIN32_IE_IE50
+_WIN32_IE_WINME    = _WIN32_IE_IE55
+_WIN32_IE_WIN2K    = _WIN32_IE_IE501
+_WIN32_IE_WIN2KSP1 = _WIN32_IE_IE501
+_WIN32_IE_WIN2KSP2 = _WIN32_IE_IE501
+_WIN32_IE_WIN2KSP3 = _WIN32_IE_IE501
+_WIN32_IE_WIN2KSP4 = _WIN32_IE_IE501
+_WIN32_IE_XP       = _WIN32_IE_IE60
+_WIN32_IE_XPSP1    = _WIN32_IE_IE60SP1
+_WIN32_IE_XPSP2    = _WIN32_IE_IE60SP2
+_WIN32_IE_XPSP3    = _WIN32_IE_IE60SP2
+_WIN32_IE_WS03     = _WIN32_IE_IE602
+_WIN32_IE_WS03SP1  = _WIN32_IE_IE60SP2
+_WIN32_IE_WS03SP2  = _WIN32_IE_IE60SP2
+_WIN32_IE_WIN6     = _WIN32_IE_IE70
+_WIN32_IE_LONGHORN = _WIN32_IE_IE70
+_WIN32_IE_VISTA    = _WIN32_IE_IE70
+_WIN32_IE_WS08     = _WIN32_IE_IE70
+_WIN32_IE_WIN7     = _WIN32_IE_IE80
+_WIN32_IE_WIN8     = _WIN32_IE_IE100
+_WIN32_IE_WINBLUE  = _WIN32_IE_IE110
+_WIN32_IE_WINTHRESHOLD = _WIN32_IE_IE110
+_WIN32_IE_WIN10    = _WIN32_IE_IE110
+_WIN32_IE_WIN11    = _WIN32_IE_IE110
+
+# NTDDI version constants. Used for more granular version control
+# and when building drivers or anything that links with the WDK.
+NTDDI_WINNT      = "0x04000000"   # Windows NT 4 SP6
+NTDDI_WIN2K      = "0x05000000"   # Windows 2000 RTM
+NTDDI_WIN2KSP1   = "0x05000100"   # Windows 2000 SP1
+NTDDI_WIN2KSP2   = "0x05000200"   # Windows 2000 SP2
+NTDDI_WIN2KSP3   = "0x05000300"   # Windows 2000 SP3
+NTDDI_WIN2KSP4   = "0x05000400"   # Windows 2000 SP4
+NTDDI_WINXP      = "0x05010000"   # Windows XP RTM
+NTDDI_WINXPSP1   = "0x05010100"   # Windows XP SP1
+NTDDI_WINXPSP2   = "0x05010200"   # Windows XP SP2
+NTDDI_WINXPSP3   = "0x05010300"   # Windows XP SP3
+NTDDI_WS03       = "0x05020000"   # Windows Server 2003 RTM
+NTDDI_WS03SP1    = "0x05020100"   # Windows Server 2003 / XP x64 RTM / R2
+NTDDI_WS03SP2    = "0x05020200"   # Windows Server 2003 / XP x64 SP2
+NTDDI_LONGHORN   = "0x06000000"   # Windows Longhorn
+NTDDI_VISTA      = "0x06000000"   # Windows Vista RTM
+NTDDI_VISTASP1   = "0x06000100"   # Windows Vista SP1
+NTDDI_VISTASP2   = "0x06000200"   # Windows Vista SP2
+NTDDI_WS08       = NTDDI_VISTASP1 # Windows Server 2008 SP1 (RTM)
+NTDDI_WS08SP2    = NTDDI_VISTASP2 # Windows Server 2008 SP2
+NTDDI_WS08SP3    = "0x06000300"   # Windows Server 2008 SP2 with Update Rollup
+NTDDI_WIN7       = "0x06010000"   # Windows 7 / Server 2008 R2 / SP1
+NTDDI_WIN8       = "0x06020000"   # Windows 8
+NTDDI_WINBLUE    = "0x06030000"   # Windows 8.1
+NTDDI_WINTHRESHOLD = "0x0A000000" # Windows 10.0.10240 / 1507 - Win10 Beta & "Threshold 1"
+NTDDI_WIN10      = "0x0A000000"   # Windows 10.0.10240 / 1507 / LTSB 2015 - "Threshold 1"
+NTDDI_WIN10_TH2  = "0x0A000001"   # Windows 10.0.10586 / 1511 - "Threshold 2"
+NTDDI_WIN10_RS1  = "0x0A000002"   # Windows 10.0.14393 / 1607 / Server 2016 / LTSC 2016 - "Redstone 1"
+NTDDI_WIN10_RS2  = "0x0A000003"   # Windows 10.0.15063 / 1703 - "Redstone 2"
+NTDDI_WIN10_RS3  = "0x0A000004"   # Windows 10.0.16299 / 1709 - "Redstone 3"
+NTDDI_WIN10_RS4  = "0x0A000005"   # Windows 10.0.17134 / 1803 - "Redstone 4"
+NTDDI_WIN10_RS5  = "0x0A000006"   # Windows 10.0.17763 / 1809 / Server 2019 / LTSC 2019 - "Redstone 5"
+NTDDI_WIN10_19H1 = "0x0A000007"   # Windows 10.0.18362 / 1903 / 19H1 - "Titanium" & 10.0.18363 - "Vanadium"
+NTDDI_WIN10_VB   = "0x0A000008"   # Windows 10.0.19041 / 2004 - "Vibranium"
+NTDDI_WIN10_MN   = "0x0A000009"   # Windows 10.0.19042 / 20H2 - "Manganese"
+NTDDI_WIN10_FE   = "0x0A00000A"   # Windows 10.0.19043 / 21H1 - "Ferrum"
+NTDDI_WIN10_CO   = "0x0A00000B"   # Windows 10.0.19044 / 21H2 / Server 2022 / LTSC 2021- "Cobalt"
+NTDDI_WIN11_CO   = NTDDI_WIN10_CO # Windows 10.0.21277-22000 / 21H2 - "Cobalt"
+NTDDI_WIN11      = NTDDI_WIN11_CO # Windows 10.0.22000 / 21H2 - "Cobalt"
+NTDDI_WIN10_NI   = "0x0A00000C"   # Windows 10.0.22621 / 22H2 - "Nickel" **
+NTDDI_WIN11_NI   = NTDDI_WIN10_NI # Windows 10.0.22449-22631 / 22H2 / 23H2 - "Nickel"
+NTDDI_WIN10_CU   = "0x0A00000D"   # Windows 10.0.22621 / 22H2 - "Copper" **
+NTDDI_WIN11_CU   = NTDDI_WIN10_CU # Windows 10.0.25057-25236 - "Copper"
+NTDDI_WIN11_ZN   = "0x0A00000E"   # Windows 10.0.25246-25398 / 23H2 - "Zinc"
+NTDDI_WIN11_GA   = "0x0A00000F"   # Windows 10.0.25905-25941 / 24H1 - "Gallium"
+NTDDI_WIN11_GE   = "0x0A000010"   # Windows 10.0.25947-26100 / 24H2 - "Germanium" & Windows 10.0.27548-27686 / 25H1 - "Dilithium"
+NTDDI_WIN11_SE   = "0x0A000011"   # Windows 10.0.27695-?     / 25H2 - "Selenium"
+
+# Default NTDDI version to use for Windows Driver Development Kit (DDK)
+WDK_NTDDI_VERSION = NTDDI_WIN10_RS5 # Most driver vendors require 1809 at a minimum now
+
+declare_args() {
+  winver_version = ""
+  win32_winnt_version = ""
+  win64_winnt_version = ""
+  win32_ie_version = ""
+  ntddi_version = ""
+  psapi_version = 0
+}
+
+declare_args() {
+  # Tweak configs to support targeting Windows 2000
+  is_win2k_build = false
+
+  # Tweak configs to support targeting Windows XP/Server 2003
+  is_winxp_build = false
+
+  # Tweak configs to support targeting Windows Vista/Server 2008
+  is_winvista_build = false
+
+  # Tweak configs to support targeting Windows 7 (Default)
+  is_win7_build = true
+
+  # Tweak configs to support targeting Windows 8
+  is_win8_build = false
+
+  # Tweak configs to support targeting Windows 8.1
+  is_win81_build = false
+
+  # Tweak configs to support targeting Windows 10
+  is_win10_build = false
+}
+
+declare_args() {
+  # Whether to use the common controls library
+  use_common_controls = !is_win2k_build
+
+  # Tweak configs to support targeting Windows 11
+  is_win11_build = !is_win10_build && !is_win81_build && !is_win81_build && !is_win8_build &&
+                   !is_win7_build && !is_winvista_build && !is_winxp_build && !is_win2k_build
+}
+
+if (is_win2k_build) {
+  winver_version = _WIN32_WINNT_WIN2K
+  win32_winnt_version = _WIN32_WINNT_WIN2K
+  win64_winnt_version = _WIN32_WINNT_WS03
+  win32_ie_version = _WIN32_IE_WIN2K
+  ntddi_version = NTDDI_WIN2K
+  psapi_version = 1
+} else if (is_winxp_build) {
+  winver_version = _WIN32_WINNT_WINXP
+  win32_winnt_version = _WIN32_WINNT_WINXP
+  win64_winnt_version = _WIN32_WINNT_WS03
+  win32_ie_version = _WIN32_IE_XPSP3
+  ntddi_version = NTDDI_WINXPSP1
+  psapi_version = 1
+} else if (is_winvista_build) {
+  winver_version = _WIN32_WINNT_VISTA
+  win32_winnt_version = _WIN32_WINNT_VISTA
+  win64_winnt_version = _WIN32_WINNT_LONGHORN
+  win32_ie_version = _WIN32_IE_VISTA
+  ntddi_version = NTDDI_LONGHORN
+  psapi_version = 1
+} else if (is_win7_build) {
+  winver_version = _WIN32_WINNT_WIN7
+  win32_winnt_version = _WIN32_WINNT_WIN7
+  win64_winnt_version = _WIN32_WINNT_WIN7
+  win32_ie_version = _WIN32_IE_WIN7
+  ntddi_version = NTDDI_WIN7
+  psapi_version = 2
+} else if (is_win8_build) {
+  winver_version = _WIN32_WINNT_WIN8
+  win32_winnt_version = _WIN32_WINNT_WIN8
+  win64_winnt_version = _WIN32_WINNT_WIN8
+  win32_ie_version = _WIN32_IE_WIN8
+  ntddi_version = NTDDI_WIN8
+  psapi_version = 2
+} else if (is_win81_build) {
+  winver_version = _WIN32_WINNT_WINBLUE
+  win32_winnt_version = _WIN32_WINNT_WINBLUE
+  win64_winnt_version = _WIN32_WINNT_WINBLUE
+  win32_ie_version = _WIN32_IE_WINBLUE
+  ntddi_version = NTDDI_WINBLUE
+  psapi_version = 2
+} else if (is_win10_build) {
+  winver_version = _WIN32_WINNT_WIN10
+  win32_winnt_version = _WIN32_WINNT_WIN10
+  win64_winnt_version = _WIN32_WINNT_WIN10
+  win32_ie_version = _WIN32_IE_WIN10
+  ntddi_version = NTDDI_WINTHRESHOLD
+  psapi_version = 2
+} else if (is_win11_build) {
+  winver_version = _WIN32_WINNT_WIN11
+  win32_winnt_version = _WIN32_WINNT_WIN11
+  win64_winnt_version = _WIN32_WINNT_WIN11
+  win32_ie_version = _WIN32_IE_WIN11
+  ntddi_version = NTDDI_WIN11_CO
+  psapi_version = 2
+} else {
+  print("Setting WINVER constants to default Win7 target values.")
+
+  winver_version = _WIN32_WINNT_WIN7
+  win32_winnt_version = _WIN32_WINNT_WIN7
+  win64_winnt_version = _WIN32_WINNT_WIN7
+  win32_ie_version = _WIN32_IE_WIN7
+  ntddi_version = NTDDI_WIN7
+  psapi_version = 2
+}

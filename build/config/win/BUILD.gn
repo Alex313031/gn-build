@@ -4,6 +4,8 @@
 
 import("//build/config/compiler.gni")
 import("//build/config/sanitizers/sanitizers.gni")
+import("//build/config/win/target_version.gni")
+import("//build/config/win/manifest.gni")
 import("//build/toolchain/win/settings.gni")
 import("//build/toolchain/toolchain.gni")
 import("//build/toolchain/clang.gni")
@@ -36,6 +38,9 @@ declare_args() {
 
   # Turn this on to have the compiler output extra timing information.
   win_compiler_timing = false
+
+  # Enable srict assertions, enforce language deprecations, warning are errors.
+  strict_mode = false
 }
 
 # This is included by reference in the //build/config/compiler config that
@@ -201,10 +206,6 @@ config("runtime_library") {
   defines = [
     "__STD_C",
     "_CRT_RAND_S",
-    "_CRT_SECURE_NO_DEPRECATE",
-    # "_CRT_SECURE_NO_WARNINGS",
-    "_SCL_SECURE_NO_DEPRECATE",
-    "_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH",
   ]
 
   # Default PSAPI version
@@ -214,6 +215,17 @@ config("runtime_library") {
     psapi_version = 1
   } else {
     psapi_version = 2
+  }
+
+  if (!strict_mode) {
+    defines += [
+      "_CRT_SECURE_NO_DEPRECATE",
+      # "_CRT_SECURE_NO_WARNINGS",
+      "_SCL_SECURE_NO_DEPRECATE",
+      "_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH", # Allow non-standard compilers and old compiler versions
+    ]
+  } else {
+    cflags += [ "/permissive-", ]
   }
 
   # Defines that set up the Windows SDK.
@@ -231,7 +243,7 @@ config("runtime_library") {
     ]
   }
 
-  if (!use_vs_code_analysis || is_winxp_build) {
+  if (!use_vs_code_analysis || is_winxp_build || is_winvista_build) {
     # This is required for ATL to use XP-safe versions of its functions.
     # However it is prohibited when using /analyze
     defines += [
@@ -285,26 +297,39 @@ config("runtime_library") {
     # When not targeting Windows Runtime, make sure the WINAPI family is set
     # to desktop.
     defines += [ "WINAPI_FAMILY=WINAPI_FAMILY_DESKTOP_APP" ]
+    # Common libs most apps would want
     libs = [
       "advapi32.lib",
-      "comctl32.lib",
       "comdlg32.lib",
       "dbghelp.lib",
-      "dwmapi.lib",
       "gdi32.lib",
       "htmlhelp.lib",
       "mpr.lib",
       "ntdll.lib",
       "ole32.lib",
       "oleaut32.lib",
-      "psapi.lib",
       "secur32.lib",
       "shell32.lib",
       "shlwapi.lib",
       "user32.lib",
       "uuid.lib",
-      "version.lib"
+      "uxtheme.lib",
+      "version.lib",
+      "winspool.lib",
+      #"vdmdbg.lib",
     ]
+    if (use_common_controls) {
+      libs += [ "comctl32.lib", ] # We may not want to use Comctl32.dll
+    }
+    if (!is_win2k_build) {
+      libs += [ "psapi.lib", ] # Windows 2000 doesn't have PSAPI
+    }
+    if (!is_win2k_build && !is_winxp_build) {
+      libs += [ "dwmapi.lib", ] # Only NT 6+ supports Aero, DWM, and dwmapi
+    }
+    if (!is_win10_build || !is_win11_build) {
+      libs += [ "legacy_stdio_definitions.lib", ] # Many old projects rely on this
+    }
   }
 }
 
@@ -312,13 +337,16 @@ config("runtime_library") {
 # targets need to manually override it for their compiles.
 config("winver") {
   defines = [
-    "WINVER=0x0501",
-    "_WIN32_WINNT=0x0501",
-    "_WIN64_WINNT=0x0502",
-    "_WIN32_IE=0x0601",
+    "WINVER=$winver_version",
+    "_WINVER=$winver_version",
+    "_WIN32_WINNT=$win32_winnt_version",
+    "_WIN64_WINNT=$win64_winnt_version",
+    "_WIN32_IE=$win32_ie_version",
   ]
-  if (!is_winxp_build) {
-    # "NTDDI_VERSION=0x06010000",
+  if (!is_win2k_build) {
+    defines += [
+      "NTDDI_VERSION=$ntddi_version",
+    ]
   }
 }
 
