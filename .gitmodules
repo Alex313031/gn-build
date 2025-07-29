@@ -1,0 +1,3 @@
+[submodule "src/picalc_win"]
+	path = src/picalc_win
+	url = https://github.com/Alex313031/PiCalc-Win
