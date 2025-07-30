@@ -10,8 +10,10 @@ group("gn_all") {
   deps += [
     # Place your deps tree to your code here
     # so that GN knows about it!
-    "//src/glasswnd:glasswnd",
-    "//src/notepad_nt:notepad_nt",
+    # "//src:taskmgr",
+    # "//src/glasswnd:glasswnd",
+    # "//src/notepad_nt:notepad_nt",
+    "//src/picalc_win:picalc",
   ]
 }
 
