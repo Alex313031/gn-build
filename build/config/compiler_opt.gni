@@ -6,6 +6,7 @@
 ## that this uses, see https://gcc.gnu.org/onlinedocs/gcc/x86-Options.html
 
 import("//build/config/win/target_version.gni")
+import("//build/config/win/manifest.gni")
 
 declare_args() {
   ## General Optimization settings

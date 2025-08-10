@@ -127,6 +127,42 @@ NTDDI_WIN11_SE   = "0x0A000011"   # Windows 10.0.27695-?     / 25H2 - "Selenium"
 # Default NTDDI version to use for Windows Driver Development Kit (DDK)
 WDK_NTDDI_VERSION = NTDDI_WIN10_RS5 # Most driver vendors require 1809 at a minimum now
 
+is_win2k_build = false
+is_winxp_build = false
+is_win2003_build = false
+is_winvista_build = false
+is_win7_build = false
+is_win8_build = false
+is_win81_build = false
+is_win10_build = false
+is_win11_build = false
+
+declare_args() {
+  win_ver = ""
+}
+
+if (win_ver == "2K" || win_ver == "2000" || win_ver == "5.0") {
+  is_win2k_build = true
+} else if (win_ver == "xp" || win_ver == "XP" || win_ver == "5.1") {
+  is_winxp_build = true
+} else if (win_ver == "2K3" || win_ver == "2003" || win_ver == "2003R2" || win_ver == "5.2") {
+  is_win2003_build = true
+} else if (win_ver == "vista" || win_ver == "Vista" || win_ver == "2008" || win_ver == "6.0") {
+  is_winvista_build = true
+} else if (win_ver == "7" || win_ver == "2008R2" || win_ver == "2011" || win_ver == "6.1") {
+  is_win7_build = true
+} else if (win_ver == "8" || win_ver == "8.0" || win_ver == "2012" || win_ver == "6.2") {
+  is_win8_build = true
+} else if (win_ver == "8.1" || win_ver == "2012R2" || win_ver == "6.3") {
+  is_win81_build = true
+} else if (win_ver == "10" || win_ver == "2016" || win_ver == "2019" || win_ver == "2022" || win_ver == "10.0") {
+  is_win10_build = true
+} else if (win_ver == "11" || win_ver == "2025" || win_ver == "10.1") {
+  is_win11_build = true
+} else if (win_ver == "") {
+  print("WARNING: win_ver was not set!")
+}
+
 declare_args() {
   winver_version = ""
   win32_winnt_version = ""
@@ -137,35 +173,8 @@ declare_args() {
 }
 
 declare_args() {
-  # Tweak configs to support targeting Windows 2000
-  is_win2k_build = false
-
-  # Tweak configs to support targeting Windows XP/Server 2003
-  is_winxp_build = false
-
-  # Tweak configs to support targeting Windows Vista/Server 2008
-  is_winvista_build = false
-
-  # Tweak configs to support targeting Windows 7 (Default)
-  is_win7_build = true
-
-  # Tweak configs to support targeting Windows 8
-  is_win8_build = false
-
-  # Tweak configs to support targeting Windows 8.1
-  is_win81_build = false
-
-  # Tweak configs to support targeting Windows 10
-  is_win10_build = false
-}
-
-declare_args() {
   # Whether to use the common controls library
   use_common_controls = !is_win2k_build
-
-  # Tweak configs to support targeting Windows 11
-  is_win11_build = !is_win10_build && !is_win81_build && !is_win81_build && !is_win8_build &&
-                   !is_win7_build && !is_winvista_build && !is_winxp_build && !is_win2k_build
 }
 
 if (is_win2k_build) {
@@ -175,6 +184,7 @@ if (is_win2k_build) {
   win32_ie_version = _WIN32_IE_WIN2K
   ntddi_version = NTDDI_WIN2K
   psapi_version = 1
+  print("is_win2k_build =", is_win2k_build)
 } else if (is_winxp_build) {
   winver_version = _WIN32_WINNT_WINXP
   win32_winnt_version = _WIN32_WINNT_WINXP
@@ -182,6 +192,15 @@ if (is_win2k_build) {
   win32_ie_version = _WIN32_IE_XPSP3
   ntddi_version = NTDDI_WINXPSP1
   psapi_version = 1
+  print("is_winxp_build =", is_winxp_build)
+} else if (is_win2003_build) {
+  winver_version = _WIN32_WINNT_WS03
+  win32_winnt_version = _WIN32_WINNT_WS03
+  win64_winnt_version = _WIN32_WINNT_WS03
+  win32_ie_version = _WIN32_IE_WS03SP1
+  ntddi_version = NTDDI_WS03SP1
+  psapi_version = 1
+  print("is_win2003_build =", is_win2003_build)
 } else if (is_winvista_build) {
   winver_version = _WIN32_WINNT_VISTA
   win32_winnt_version = _WIN32_WINNT_VISTA
@@ -189,6 +208,7 @@ if (is_win2k_build) {
   win32_ie_version = _WIN32_IE_VISTA
   ntddi_version = NTDDI_LONGHORN
   psapi_version = 1
+  print("is_winvista_build =", is_winvista_build)
 } else if (is_win7_build) {
   winver_version = _WIN32_WINNT_WIN7
   win32_winnt_version = _WIN32_WINNT_WIN7
@@ -196,6 +216,7 @@ if (is_win2k_build) {
   win32_ie_version = _WIN32_IE_WIN7
   ntddi_version = NTDDI_WIN7
   psapi_version = 2
+  print("is_win7_build =", is_win7_build)
 } else if (is_win8_build) {
   winver_version = _WIN32_WINNT_WIN8
   win32_winnt_version = _WIN32_WINNT_WIN8
@@ -203,6 +224,7 @@ if (is_win2k_build) {
   win32_ie_version = _WIN32_IE_WIN8
   ntddi_version = NTDDI_WIN8
   psapi_version = 2
+  print("is_win8_build =", is_win8_build)
 } else if (is_win81_build) {
   winver_version = _WIN32_WINNT_WINBLUE
   win32_winnt_version = _WIN32_WINNT_WINBLUE
@@ -210,6 +232,7 @@ if (is_win2k_build) {
   win32_ie_version = _WIN32_IE_WINBLUE
   ntddi_version = NTDDI_WINBLUE
   psapi_version = 2
+  print("is_win81_build =", is_win81_build)
 } else if (is_win10_build) {
   winver_version = _WIN32_WINNT_WIN10
   win32_winnt_version = _WIN32_WINNT_WIN10
@@ -217,6 +240,7 @@ if (is_win2k_build) {
   win32_ie_version = _WIN32_IE_WIN10
   ntddi_version = NTDDI_WINTHRESHOLD
   psapi_version = 2
+  print("is_win10_build =", is_win10_build)
 } else if (is_win11_build) {
   winver_version = _WIN32_WINNT_WIN11
   win32_winnt_version = _WIN32_WINNT_WIN11
@@ -224,9 +248,9 @@ if (is_win2k_build) {
   win32_ie_version = _WIN32_IE_WIN11
   ntddi_version = NTDDI_WIN11_CO
   psapi_version = 2
+  print("is_win11_build =", is_win11_build)
 } else {
-  print("Setting WINVER constants to default Win7 target values.")
-
+  print("Setting win_ver constants to default Win7 target values.")
   winver_version = _WIN32_WINNT_WIN7
   win32_winnt_version = _WIN32_WINNT_WIN7
   win64_winnt_version = _WIN32_WINNT_WIN7
