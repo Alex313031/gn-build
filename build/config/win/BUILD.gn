@@ -318,9 +318,7 @@ config("runtime_library") {
       "winspool.lib",
       #"vdmdbg.lib",
     ]
-    if (use_common_controls) {
-      libs += [ "comctl32.lib", ] # We may not want to use Comctl32.dll
-    }
+    libs += [ "comctl32.lib", ] # We may not want to use Comctl32.dll
     if (!is_win2k_build) {
       libs += [ "psapi.lib", ] # Windows 2000 doesn't have PSAPI
     }
@@ -356,12 +354,22 @@ config("sdk_link") {
              current_cpu == "arm64",
          "Only supports x64, x86, arm and arm64 CPUs")
 
-  lib_dirs = [
-    current_toolchain_data.vc_lib_um_path,
-    current_toolchain_data.vc_lib_path,
-  ]
-  if (defined(current_toolchain_data.vc_lib_atlmfc_path)) {
-    lib_dirs += [ current_toolchain_data.vc_lib_atlmfc_path ]
+  if (use_legacy_toolchain) {
+    lib_dirs = [
+      "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Lib",
+      "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.16.27023\lib\x86",
+    ]
+    if (defined(current_toolchain_data.vc_lib_atlmfc_path)) {
+      lib_dirs += [ "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\atlmfc\lib\x86", ]
+    }
+  } else {
+    lib_dirs = [
+      current_toolchain_data.vc_lib_um_path,
+      current_toolchain_data.vc_lib_path,
+    ]
+    if (defined(current_toolchain_data.vc_lib_atlmfc_path)) {
+      lib_dirs += [ current_toolchain_data.vc_lib_atlmfc_path ]
+    }
   }
 }
 

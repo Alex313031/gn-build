@@ -2,6 +2,8 @@ if (is_clang) {
   import("//build/toolchain/clang.gni")
 }
 
+import("//build/config/win/target_version.gni")
+
 declare_args() {
   # Desired version of Visual Studio.
   # If visual_studio_path is set, this must be
@@ -54,43 +56,74 @@ if (visual_studio_path == "") {
   visual_studio_path = "default"
 }
 
-if (cached_toolchain_data != "") {
+if (cached_toolchain_data != "" && !use_legacy_toolchain) {
   toolchain_data = cached_toolchain_data
 } else {
-  toolchain_data = exec_script("toolchain.py",
-                               [
-                                 "setup_toolchain",
-                                 visual_studio_version,
-                                 visual_studio_path,
-                                 windows_sdk_version,
-
-                                 # Don't use clang_base_path directly, so we can
-                                 # skip clang detection if not needed
-                                 # (i.e. !is_clang).
-                                 _clang_base_path_arg,
-                                 _clang_msc_ver,
-                               ],
-                               "scope")
+  if (use_legacy_toolchain) {
+    toolchain_data = exec_script("toolchain_xp.py",
+                                 [
+                                   "setup_toolchain",
+                                   visual_studio_version,
+                                   visual_studio_path,
+                                   windows_sdk_version,
+                                   # Don't use clang_base_path directly, so we can
+                                   # skip clang detection if not needed
+                                   # (i.e. !is_clang).
+                                   _clang_base_path_arg,
+                                   _clang_msc_ver,
+                                 ],
+                                 "scope")
+  } else {
+    toolchain_data = exec_script("toolchain.py",
+                                 [
+                                   "setup_toolchain",
+                                   visual_studio_version,
+                                   visual_studio_path,
+                                   windows_sdk_version,
+                                   # Don't use clang_base_path directly, so we can
+                                   # skip clang detection if not needed
+                                   # (i.e. !is_clang).
+                                   _clang_base_path_arg,
+                                   _clang_msc_ver,
+                                 ],
+                                 "scope")
+  }
 }
 
 visual_studio_version = toolchain_data.visual_studio_version
 visual_studio_path = toolchain_data.visual_studio_path
 
 # Full path to the Windows SDK, not including a backslash at the end.
-windows_sdk_path = toolchain_data.windows_sdk_path
+if (use_legacy_toolchain) {
+  windows_sdk_path = "C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v7.1A"
+} else {
+  windows_sdk_path = toolchain_data.windows_sdk_path
+}
 
 # Value of the _MSC_VER variable.
 # see: https://msdn.microsoft.com/en-us/library/b0084kay.aspx
-msc_ver = toolchain_data.msc_ver
+if (use_legacy_toolchain) {
+  msc_ver = 1910
+} else {
+  msc_ver = toolchain_data.msc_ver
+}
 
 # Value of the _MSC_FULL_VER variable.
 # see: https://msdn.microsoft.com/en-us/library/b0084kay.aspx
-msc_full_ver = toolchain_data.msc_full_ver
+if (use_legacy_toolchain) {
+  msc_full_ver = 191000000
+} else {
+  msc_full_ver = toolchain_data.msc_full_ver
+}
 
 if (defined(toolchain_data.clang_version)) {
   win_clang_version = toolchain_data.clang_version
 } else {
-  win_clang_version = 0
+  if (use_legacy_toolchain) {
+    win_clang_version = 180108
+  } else {
+    win_clang_version = 0
+  }
 }
 
 # current_toolchain_data: Settings specific to current_os/current_cpu

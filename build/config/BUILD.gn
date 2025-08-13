@@ -1224,6 +1224,9 @@ config("afdo") {
 # Full symbols.
 config("symbols") {
   if (is_win) {
+    if (enable_iterator_debugging) {
+      defines = [ "_ITERATOR_DEBUG_LEVEL=2", "_HAS_ITERATOR_DEBUGGING=1", ]
+    }
     cflags = [ "/Zi" ]  # Produce PDB file, no edit and continue.
 
     if (is_win_fastlink && msc_full_ver >= 190000000) {
@@ -1278,6 +1281,9 @@ config("minimal_symbols") {
   if (is_win) {
     # Linker symbols for backtraces only.
     cflags = []
+    if (enable_iterator_debugging) {
+      defines = [ "_ITERATOR_DEBUG_LEVEL=1", "_HAS_ITERATOR_DEBUGGING=0", ]
+    }
     if (is_win_fastlink && msc_full_ver >= 190000000) {
       # Tell VS 2015+ to create a PDB that references debug
       # information in .obj and .lib files instead of copying
@@ -1307,7 +1313,9 @@ config("minimal_symbols") {
 
 # No symbols.
 config("no_symbols") {
-  if (!is_win) {
+  if (is_win) {
+    defines = [ "_ITERATOR_DEBUG_LEVEL=0", "_HAS_ITERATOR_DEBUGGING=0", ]
+  } else {
     cflags = [ "-g0" ]
     asmflags = cflags
   }

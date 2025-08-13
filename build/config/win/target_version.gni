@@ -138,6 +138,7 @@ is_win10_build = false
 is_win11_build = false
 
 declare_args() {
+  # What windows version to target. Valid string values are
   win_ver = ""
 }
 
@@ -173,7 +174,11 @@ declare_args() {
 }
 
 declare_args() {
-  # Whether to use the common controls library
+  # Whether to use the Windows XP/2003 compatible toolchain
+  use_legacy_toolchain = is_win2k_build || is_winxp_build || is_win2003_build
+
+  # Whether to use common controls version 6.0 via Manifest
+  # Note that due to contraints, comctl32 is always linked in
   use_common_controls = !is_win2k_build
 }
 
