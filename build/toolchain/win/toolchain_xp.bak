@@ -5,7 +5,6 @@
 
 import json
 import re
-import pathlib
 import os
 import subprocess
 import itertools
@@ -14,9 +13,6 @@ import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir))
 import gn_helpers
 
-script_directory = pathlib.Path(__file__).parent.resolve()
-
-PRINT_DEBUG = True
 
 def _RegistryGetValueUsingWinReg(key, value):
   """Use the _winreg module to obtain the value of a registry key.
@@ -48,7 +44,7 @@ def _RegistryGetValue(key, value):
     raise Exception('The python library _winreg not found.')
 
 
-def _ExtractImportantEnvironment(cpuname):
+def _ExtractImportantEnvironment(output_of_set):
   """Extracts environment variables required for the toolchain to run from
   a textual dump output by the cmd.exe 'set' command."""
   envvars_to_save = (
@@ -62,19 +58,9 @@ def _ExtractImportantEnvironment(cpuname):
     'tmp',
     'windowssdkdir',
   )
-  
-  # Get path to a file with variables manually set up to support building for Windows XP/2003
-  here = pathlib.Path(script_directory)
-  if cpuname == 'x86':
-    env_file = here / 'env_xp_x86.txt'
-  elif cpuname == 'x64':
-    env_file = here / 'env_xp_x64.txt'
-  else:
-    env_file = here / 'env_xp_x86.txt'
-
   env = {}
-  with open(env_file, "r") as file:
-    output_of_set = file.read()
+  # This occasionally happens and leads to misleading SYSTEMROOT error messages
+  # if not caught here.
   if output_of_set.count('=') == 0:
     raise Exception('Invalid output_of_set. Value is:\n%s' % output_of_set)
   for line in output_of_set.splitlines():
@@ -314,105 +300,63 @@ def GetVsPath(version_as_year):
 def SetupToolchainTargetCombos(vs_path, sdk_version=None, force=True):
   cpus = ('x86', 'x64', 'arm', 'arm64')
 
+  # TODO(tim): We now launch all processes at once, but this still takes too long
+  processes = {}
+  for (cpu, is_uwp) in itertools.product(cpus, (False, True)):
+    name = cpu + ('_uwp' if is_uwp else '')
+    env_filename = 'environment_{}'.format(name)
+    if force or not os.path.exists(env_filename):
+      processes[name] = _Spawn(_BuildToolchainSetupCommand(vs_path, cpu, sdk_version, is_uwp))
+
   windows_sdk_paths = {}
   envs = {}
   for (cpu, is_uwp) in itertools.product(cpus, (False, True)):
     name = cpu + ('_uwp' if is_uwp else '')
     env_filename = 'environment_{}'.format(name)
     # Load environment variables.
-    #env = LoadEnvFromCache(env_filename)
+    env = LoadEnvFromCache(env_filename)
     if force or env is None:
-      cpuname = cpu
-      env = _ExtractImportantEnvironment(cpuname)
+      # Extract environment variables for subprocesses.
+      env = _ExtractImportantEnvironment(_ProcessSpawnResult(processes[name]))
       SaveEnv(env_filename, env)
     envs[name] = env
 
-    vc_bin_dir = ''
-    vc_lib_path = ''
-    vc_lib_atlmfc_path = ''
-    vc_lib_um_path = ''
-    for path in env['PATH'].split(os.pathsep):
-      if os.path.exists(os.path.join(path, 'cl.exe')):
-        vc_bin_dir = os.path.realpath(path)
-        break
+    vc_bin_dir = 'C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.16.27023\\bin\\HostX64\\x86'
+    vc_lib_path = 'C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.16.27023\\lib\\x86'
+    vc_lib_atlmfc_path = 'C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\atlmfc\\lib\\x86'
+    vc_lib_um_path = 'C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v7.1A\\Lib'
+    vc_lib_include_path = 'C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.16.27023\\include'
+    vc_lib_shared_path = 'C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.19041.0\\shared'
+    vc_sdk_include_path = 'C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v7.1A\\Include'
+    vc_lib_ucrt_path = 'C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.10240.0\\ucrt'
 
-    if not vc_bin_dir:
-      continue
+    windows_sdk_paths[name] = 'C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v7.1A'
 
-    for path in env['LIB'].split(os.pathsep):
-      if os.path.exists(os.path.join(path, 'msvcrt.lib')):
-        vc_lib_path = os.path.realpath(path)
-        break
+    include_I = '\"/I ..\\..\\..\\..\\Program Files (x86)\\Microsoft SDKs\\Windows\\v7.1A\\Include\" \"/I ..\\..\\..\\..\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.16.27023\\include\"  \"/I ..\\..\\..\\..\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.10240.0\\ucrt\" \"/I ..\\..\\..\\..\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.19041.0\\shared\"'
+    include_imsvc = '\"-imsvc..\\..\\..\\..\\Program Files (x86)\\Microsoft SDKs\\Windows\\v7.1A\\Include\" \"-imsvc..\\..\\..\\..\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.16.27023\\include\" \"-imsvc..\\..\\..\\..\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.10240.0\\ucrt\" \"-imsvc..\\..\\..\\..\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.19041.0\\shared\"'
+    libpath_flags = '\"-libpath:..\\..\\..\\..\\Program Files (x86)\\Microsoft SDKs\\Windows\\v7.1A\\Lib\" \"-libpath:..\\..\\..\\..\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.16.27023\\lib\\x86\" \"-libpath:..\\..\\..\\..\\Program Files (x86)\\Windows Kits\\10\\Lib\\10.0.19041.0\\um\\x86\" \"-libpath:..\\..\\..\\..\\Program Files (x86)\\Windows Kits\\10\\Lib\\10.0.10240.0\\ucrt\\x86\"'
 
-    for path in env['LIB'].split(os.pathsep):
-      if os.path.exists(os.path.join(path, 'atls.lib')):
-        vc_lib_atlmfc_path = os.path.realpath(path)
-        break
+    print(name + ' = {')
 
-    for path in env['LIB'].split(os.pathsep):
-      if os.path.exists(os.path.join(path, 'User32.Lib')):
-        vc_lib_um_path = os.path.realpath(path)
-        break
-
-    # Ignore incomplete installations.
-    # e.g. VS supports ARM64, but the Windows SDK does not.
-    if not vc_lib_path or not vc_lib_um_path:
-      continue
-
-    windows_sdk_paths[name] = os.path.realpath(env['WINDOWSSDKDIR'])
-
-    # The separator for INCLUDE here must match the one used in
-    # _LoadToolchainEnv() above.
-    include = [p.replace('"', r'\"') for p in env['INCLUDE'].split(';') if p]
-
-    # Make include path relative to builddir when cwd and sdk in same drive.
-    try:
-      include = list(map(os.path.relpath, include))
-    except ValueError:
-      pass
-
-    lib = [p.replace('"', r'\"') for p in env['LIB'].split(';') if p]
-    # Make lib path relative to builddir when cwd and sdk in same drive.
-    try:
-      lib = list(map(os.path.relpath, lib))
-    except ValueError:
-      pass
-
-    def q(s):  # Quote s if it contains spaces or other weird characters.
-      return s if re.match(r'^[a-zA-Z0-9._/\\:-]*$', s) else '"' + s + '"'
-
-    include_I = ' '.join([q('/I' + i) for i in include])
-    include_imsvc = ' '.join([q('-imsvc' + i) for i in include])
-    libpath_flags = ' '.join([q('-libpath:' + i) for i in lib])
-
-    if PRINT_DEBUG:
-      print(name + ' = {')
-      print('env_filename = ' + gn_helpers.ToGNString(env_filename))
-
+    print('env_filename = ' + gn_helpers.ToGNString(env_filename))
     assert vc_bin_dir
-    if PRINT_DEBUG:
-      print('vc_bin_dir = ' + gn_helpers.ToGNString(vc_bin_dir))
+    print('vc_bin_dir = ' + gn_helpers.ToGNString(vc_bin_dir))
     assert include_I
-    if PRINT_DEBUG:
-      print('include_flags_I = ' + gn_helpers.ToGNString(include_I))
+    print('include_flags_I = ' + gn_helpers.ToGNString(include_I))
     assert include_imsvc
-    if PRINT_DEBUG:
-      print('include_flags_imsvc = ' + gn_helpers.ToGNString(include_imsvc))
+    print('include_flags_imsvc = ' + gn_helpers.ToGNString(include_imsvc))
     assert vc_lib_path
-    if PRINT_DEBUG:
-      print('vc_lib_path = ' + gn_helpers.ToGNString(vc_lib_path))
+    print('vc_lib_path = ' + gn_helpers.ToGNString(vc_lib_path))
     # Possible atlmfc library path gets introduced in the future for store thus
     # output result if a result exists.
-    if vc_lib_atlmfc_path != '' and PRINT_DEBUG:
+    if vc_lib_atlmfc_path != '':
       print('vc_lib_atlmfc_path = ' + gn_helpers.ToGNString(vc_lib_atlmfc_path))
     assert vc_lib_um_path
-    if PRINT_DEBUG:
-      print('vc_lib_um_path = ' + gn_helpers.ToGNString(vc_lib_um_path))
-      print('paths = ' + gn_helpers.ToGNString(env['PATH']))
+    print('vc_lib_um_path = ' + gn_helpers.ToGNString(vc_lib_um_path))
+    print('paths = ' + gn_helpers.ToGNString(env['PATH']))
     assert libpath_flags
-    if PRINT_DEBUG:
-      print('libpath_flags = ' + gn_helpers.ToGNString(libpath_flags))
-      print('}')
+    print('libpath_flags = ' + gn_helpers.ToGNString(libpath_flags))
+    print('}')
 
   return envs, windows_sdk_paths
 
@@ -452,29 +396,25 @@ def SetupToolchain(version_as_year, vs_path, sdk_version=None,
   if len(set(windows_sdk_paths.values())) != 1:
     raise Exception("Different WINDOWSSDKDIR values for different CPUs are unsupported")
 
-  if PRINT_DEBUG:
-    print('visual_studio_version = ' + gn_helpers.ToGNString(version_as_year))
-    print('visual_studio_path = ' + gn_helpers.ToGNString(vs_path))
+  print('visual_studio_version = ' + gn_helpers.ToGNString(version_as_year))
+  print('visual_studio_path = ' + gn_helpers.ToGNString(vs_path))
 
   # SDK is always the same
-  if PRINT_DEBUG:
-    print('windows_sdk_path = ' + gn_helpers.ToGNString(windows_sdk_paths['x86']))
+  print('windows_sdk_path = ' + gn_helpers.ToGNString(windows_sdk_paths['x86']))
 
   # TODO(tim): Check for mismatches between x86 and x64?
   if clang_base_path:
     msc_ver = clang_msc_ver or _GetClangMscVersionFromYear(version_as_year)
     clang_version, msc_full_ver = _GetClangVersion(clang_base_path, msc_ver)
-    if PRINT_DEBUG:
-      print('clang_version = ' + gn_helpers.ToGNString(clang_version))
-      print('msc_ver = ' + gn_helpers.ToGNString(msc_full_ver // 100000))
-      print('msc_full_ver = ' + gn_helpers.ToGNString(msc_full_ver))
+    print('clang_version = ' + gn_helpers.ToGNString(clang_version))
+    print('msc_ver = ' + gn_helpers.ToGNString(msc_full_ver // 100000))
+    print('msc_full_ver = ' + gn_helpers.ToGNString(msc_full_ver))
   else:
     # TODO(tim): Do we want to support different toolchain versions for
     # different architectures?
     msc_full_ver = _ParseClVersion(_ProcessSpawnResult(_Spawn(['cl'], env=envs['x86'])))
-    if PRINT_DEBUG:
-      print('msc_ver = ' + gn_helpers.ToGNString(msc_full_ver // 100000))
-      print('msc_full_ver = ' + gn_helpers.ToGNString(msc_full_ver))
+    print('msc_ver = ' + gn_helpers.ToGNString(msc_full_ver // 100000))
+    print('msc_full_ver = ' + gn_helpers.ToGNString(msc_full_ver))
 
 
 def main():

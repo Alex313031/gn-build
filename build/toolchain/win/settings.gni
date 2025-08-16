@@ -74,7 +74,7 @@ if (cached_toolchain_data != "" && !use_legacy_toolchain) {
                                  ],
                                  "scope")
   } else {
-    toolchain_data = exec_script("toolchain.py",
+    toolchain_data = exec_script("toolchain_xp.py",
                                  [
                                    "setup_toolchain",
                                    visual_studio_version,
@@ -94,11 +94,7 @@ visual_studio_version = toolchain_data.visual_studio_version
 visual_studio_path = toolchain_data.visual_studio_path
 
 # Full path to the Windows SDK, not including a backslash at the end.
-if (use_legacy_toolchain) {
-  windows_sdk_path = "C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v7.1A"
-} else {
-  windows_sdk_path = toolchain_data.windows_sdk_path
-}
+windows_sdk_path = toolchain_data.windows_sdk_path
 
 # Value of the _MSC_VER variable.
 # see: https://msdn.microsoft.com/en-us/library/b0084kay.aspx

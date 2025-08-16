@@ -10,6 +10,7 @@ declare_args() {
   clang_base_path = ""
 
   # Set to true to use lld, the LLVM linker.
+  # Otherwise, use the GCC ld or MSVC link.exe.
   use_lld = is_clang
 
   # Enables the experimental support of ThinLTO that links 3x-10x faster but
