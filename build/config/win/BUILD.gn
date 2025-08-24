@@ -337,6 +337,7 @@ config("runtime_library") {
     }
     if (!is_win10_build || !is_win11_build) {
       # Many old projects rely on this, new ones shouldn't
+      defines += [ "_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING" ]
       libs += [ "legacy_stdio_definitions.lib", ]
     }
   }

@@ -4,6 +4,7 @@
 
 import("//build/config/compiler.gni")
 import("//build/config/compiler_opt.gni")
+import("//build/config/static_shared.gni")
 import("//build/config/win/manifest.gni")
 import("//build/config/win/target_version.gni")
 import("//build/config/sanitizers/sanitizers.gni")
@@ -50,6 +51,10 @@ declare_args() {
   # of the current object. For iterator- and thread-heavy code, this can
   # significantly slow execution.
   enable_iterator_debugging = false
+
+  # Select the _ITERATOR_DEBUG_LEVEL define level when
+  # enable_iterator_debugging = true
+  iterator_debug_level = -1
 
   # When we are going to use gold we need to find it.
   gold_path = ""
@@ -109,17 +114,6 @@ declare_args() {
   extra_ldflags = ""
 }
 
-declare_args() {
-  # Component build. Setting to true compiles targets declared as "components"
-  # as shared libraries loaded dynamically. This speeds up development time.
-  # When false, components will be linked statically.
-  #
-  # For more information see
-  # https://chromium.googlesource.com/chromium/src/+/main/docs/component_build.md
-  is_component_build =
-      is_debug && current_os != "ios"
-}
-
 if (is_win && !is_clang) {
   assert(!use_incremental_ltcg || msc_ver >= 1900,
          "/LTCG:INCREMENTAL is only available on VS 2015+")
@@ -143,8 +137,8 @@ config("compiler") {
   defines = []
   configs = []
 
-  if (is_component_build) {
-    defines += [ "COMPONENT_BUILD", ]
+  if (is_static_build) {
+    defines += [ "STATIC_BUILD", ]
   }
 
   # Use C11 by default
@@ -1225,7 +1219,11 @@ config("afdo") {
 config("symbols") {
   if (is_win) {
     if (enable_iterator_debugging) {
-      defines = [ "_ITERATOR_DEBUG_LEVEL=2", "_HAS_ITERATOR_DEBUGGING=1", ]
+      if (iterator_debug_level != -1) {
+        defines = [ "_ITERATOR_DEBUG_LEVEL=${iterator_debug_level}", "_HAS_ITERATOR_DEBUGGING=1", ]
+      } else {
+        defines = [ "_ITERATOR_DEBUG_LEVEL=2", "_HAS_ITERATOR_DEBUGGING=1", ]
+      }
     }
     cflags = [ "/Zi" ]  # Produce PDB file, no edit and continue.
 
@@ -1282,8 +1280,17 @@ config("minimal_symbols") {
     # Linker symbols for backtraces only.
     cflags = []
     if (enable_iterator_debugging) {
-      defines = [ "_ITERATOR_DEBUG_LEVEL=1", "_HAS_ITERATOR_DEBUGGING=0", ]
+      if (iterator_debug_level != -1) {
+        if (iterator_debug_level == 2) {
+          defines = [ "_ITERATOR_DEBUG_LEVEL=${iterator_debug_level}", "_HAS_ITERATOR_DEBUGGING=1", ]
+        } else {
+          defines = [ "_ITERATOR_DEBUG_LEVEL=${iterator_debug_level}", "_HAS_ITERATOR_DEBUGGING=0", ]
+        }
+      } else {
+        defines = [ "_ITERATOR_DEBUG_LEVEL=1", "_HAS_ITERATOR_DEBUGGING=0", ]
+      }
     }
+
     if (is_win_fastlink && msc_full_ver >= 190000000) {
       # Tell VS 2015+ to create a PDB that references debug
       # information in .obj and .lib files instead of copying
@@ -1314,6 +1321,9 @@ config("minimal_symbols") {
 # No symbols.
 config("no_symbols") {
   if (is_win) {
+    if (symbol_level == 0) {
+      assert(iterator_debug_level == -1, "iterator_debug_level cannot be set when symbol_level = 0")
+    }
     defines = [ "_ITERATOR_DEBUG_LEVEL=0", "_HAS_ITERATOR_DEBUGGING=0", ]
   } else {
     cflags = [ "-g0" ]
@@ -1438,6 +1448,10 @@ config("executable_config") {
       configs += [ "//build/config/android:executable_config" ]
     }
   }
+
+  if (is_component_build) {
+    defines = [ "COMPONENT_BUILD" ]
+  }
 }
 
 # Shared library configs -------------------------------------------------------
@@ -1452,5 +1466,33 @@ config("shared_library_config") {
     configs += [ "//build/config/mac:mac_dynamic_flags" ]
   } else if (is_ios) {
     configs += [ "//build/config/ios:ios_dynamic_flags" ]
+  }
+
+  # Always build as a component
+  defines = [ "COMPONENT_BUILD" ]
+}
+
+# Static library configs -------------------------------------------------------
+
+# This config defines the configs applied to all static libraries.
+config("static_library_config") {
+  # Never build as a component
+  defines = [ "STATIC_BUILD" ]
+}
+
+# Source set configs -------------------------------------------------------
+
+# This config defines the configs that should not be compiler defaults
+# but still applied to source_sets.
+config("source_set_config") {
+  if (is_component_build) {
+    defines = [ "COMPONENT_BUILD" ]
+  }
+}
+
+config("no_default_lib") {
+  defines = [ "NODEFAULTLIB" ]
+  if (is_win) {
+    ldflags = [ "/NODEFAULTLIB" ]
   }
 }

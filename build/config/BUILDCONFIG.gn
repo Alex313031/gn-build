@@ -336,6 +336,7 @@ set_defaults("static_library") {
 }
 set_defaults("source_set") {
   configs = default_compiler_configs
+  configs += [ "//build/config:source_set_config" ]
 }
 
 # Compute the set of configs common to all linked targets (shared libraries,
@@ -379,9 +380,6 @@ default_shared_library_configs = default_compiler_configs + [
 
 set_defaults("shared_library") {
   configs = default_shared_library_configs
-
-  # Always build as component
-  defines = [ "COMPONENT_BUILD" ]
 }
 
 set_defaults("loadable_module") {

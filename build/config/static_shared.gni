@@ -1,0 +1,18 @@
+declare_args() {
+  # Component build. Setting to true compiles targets declared as "components"
+  # as shared libraries loaded dynamically. This speeds up development time.
+  # When false, components will be linked statically.
+  #
+  # For more information see
+  # https://chromium.googlesource.com/chromium/src/+/main/docs/component_build.md
+  is_component_build =
+      is_debug && current_os != "ios"
+}
+
+declare_args() {
+  is_static_build = !is_component_build
+}
+
+if (is_static_build) {
+  assert(!is_component_build, "is_static_build and is_component_build cannot both be true: Static and shared libraries conflict")
+}

@@ -428,7 +428,7 @@ def SetupToolchain(version_as_year, vs_path, sdk_version=None,
   elif not vs_path or vs_path == 'default':
     vs_path = DetectVisualStudioPath(version_as_year)
 
-  envs, windows_sdk_paths = SetupToolchainTargetCombos(vs_path, sdk_version)
+  envs, windows_sdk_paths = SetupToolchainTargetCombos(vs_path, sdk_version, force=False)
   if not windows_sdk_paths:
     # Retry with new environment files
     envs, windows_sdk_paths = SetupToolchainTargetCombos(vs_path, sdk_version, force=True)

@@ -21,7 +21,7 @@ declare_args() {
   visual_studio_path = ""
 
   # Windows SDK version to use.
-  # Can either be a full Windows 10 SDK number (e.g. 10.0.10240.0),
+  # Can either be a full Windows 10 SDK number (e.g. 10.0.19041.0),
   # "8.1" for the Windows 8.1 SDK or "default" to use the VS default version.
   windows_sdk_version = "default"
 
@@ -74,7 +74,7 @@ if (cached_toolchain_data != "" && !use_legacy_toolchain) {
                                  ],
                                  "scope")
   } else {
-    toolchain_data = exec_script("toolchain_xp.py",
+    toolchain_data = exec_script("toolchain.py",
                                  [
                                    "setup_toolchain",
                                    visual_studio_version,
@@ -98,19 +98,11 @@ windows_sdk_path = toolchain_data.windows_sdk_path
 
 # Value of the _MSC_VER variable.
 # see: https://msdn.microsoft.com/en-us/library/b0084kay.aspx
-if (use_legacy_toolchain) {
-  msc_ver = 1910
-} else {
-  msc_ver = toolchain_data.msc_ver
-}
+msc_ver = toolchain_data.msc_ver
 
 # Value of the _MSC_FULL_VER variable.
 # see: https://msdn.microsoft.com/en-us/library/b0084kay.aspx
-if (use_legacy_toolchain) {
-  msc_full_ver = 191000000
-} else {
-  msc_full_ver = toolchain_data.msc_full_ver
-}
+msc_full_ver = toolchain_data.msc_full_ver
 
 if (defined(toolchain_data.clang_version)) {
   win_clang_version = toolchain_data.clang_version
