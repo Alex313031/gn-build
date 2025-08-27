@@ -8,3 +8,5 @@ what is necessary to support XP, and omit it when not needed.
 Add more up to date //build configs from M108
 
 Add RC, and possible other toolchain bins/directives from Cr
+
+Add mini_chromium base lib

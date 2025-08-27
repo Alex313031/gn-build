@@ -1,3 +1,5 @@
+import("//build/toolchain/toolchain.gni")
+
 ## Flags used to control compiler/linker flags and defines
 ## to support older versions of Windows.
 
@@ -190,7 +192,6 @@ if (is_win2k_build) {
   win32_ie_version = _WIN32_IE_WIN2K
   ntddi_version = NTDDI_WIN2K
   psapi_version = 1
-  print("is_win2k_build =", is_win2k_build)
 } else if (is_winxp_build) {
   winver_version = _WIN32_WINNT_WINXP
   win32_winnt_version = _WIN32_WINNT_WINXP
@@ -198,7 +199,6 @@ if (is_win2k_build) {
   win32_ie_version = _WIN32_IE_XPSP3
   ntddi_version = NTDDI_WINXPSP1
   psapi_version = 1
-  print("is_winxp_build =", is_winxp_build)
 } else if (is_win2003_build) {
   winver_version = _WIN32_WINNT_WS03
   win32_winnt_version = _WIN32_WINNT_WS03
@@ -206,7 +206,6 @@ if (is_win2k_build) {
   win32_ie_version = _WIN32_IE_WS03SP1
   ntddi_version = NTDDI_WS03SP1
   psapi_version = 1
-  print("is_win2003_build =", is_win2003_build)
 } else if (is_winvista_build) {
   winver_version = _WIN32_WINNT_VISTA
   win32_winnt_version = _WIN32_WINNT_VISTA
@@ -214,7 +213,6 @@ if (is_win2k_build) {
   win32_ie_version = _WIN32_IE_VISTA
   ntddi_version = NTDDI_LONGHORN
   psapi_version = 1
-  print("is_winvista_build =", is_winvista_build)
 } else if (is_win7_build) {
   winver_version = _WIN32_WINNT_WIN7
   win32_winnt_version = _WIN32_WINNT_WIN7
@@ -222,7 +220,6 @@ if (is_win2k_build) {
   win32_ie_version = _WIN32_IE_WIN7
   ntddi_version = NTDDI_WIN7
   psapi_version = 2
-  print("is_win7_build =", is_win7_build)
 } else if (is_win8_build) {
   winver_version = _WIN32_WINNT_WIN8
   win32_winnt_version = _WIN32_WINNT_WIN8
@@ -230,7 +227,6 @@ if (is_win2k_build) {
   win32_ie_version = _WIN32_IE_WIN8
   ntddi_version = NTDDI_WIN8
   psapi_version = 2
-  print("is_win8_build =", is_win8_build)
 } else if (is_win81_build) {
   winver_version = _WIN32_WINNT_WINBLUE
   win32_winnt_version = _WIN32_WINNT_WINBLUE
@@ -238,7 +234,6 @@ if (is_win2k_build) {
   win32_ie_version = _WIN32_IE_WINBLUE
   ntddi_version = NTDDI_WINBLUE
   psapi_version = 2
-  print("is_win81_build =", is_win81_build)
 } else if (is_win10_build) {
   winver_version = _WIN32_WINNT_WIN10
   win32_winnt_version = _WIN32_WINNT_WIN10
@@ -246,7 +241,6 @@ if (is_win2k_build) {
   win32_ie_version = _WIN32_IE_WIN10
   ntddi_version = NTDDI_WINTHRESHOLD
   psapi_version = 2
-  print("is_win10_build =", is_win10_build)
 } else if (is_win11_build) {
   winver_version = _WIN32_WINNT_WIN11
   win32_winnt_version = _WIN32_WINNT_WIN11
@@ -254,7 +248,6 @@ if (is_win2k_build) {
   win32_ie_version = _WIN32_IE_WIN11
   ntddi_version = NTDDI_WIN11_CO
   psapi_version = 2
-  print("is_win11_build =", is_win11_build)
 } else {
   print("Setting win_ver constants to default Win7 target values.")
   winver_version = _WIN32_WINNT_WIN7
@@ -263,4 +256,16 @@ if (is_win2k_build) {
   win32_ie_version = _WIN32_IE_WIN7
   ntddi_version = NTDDI_WIN7
   psapi_version = 2
+}
+
+if (print_toolchain_info) {
+  print("is_win2k_build =", is_win2k_build)
+  print("is_winxp_build =", is_winxp_build)
+  print("is_win2003_build =", is_win2003_build)
+  print("is_winvista_build =", is_winvista_build)
+  print("is_win7_build =", is_win7_build)
+  print("is_win8_build =", is_win8_build)
+  print("is_win81_build =", is_win81_build)
+  print("is_win10_build =", is_win10_build)
+  print("is_win11_build =", is_win11_build)
 }

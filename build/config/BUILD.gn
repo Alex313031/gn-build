@@ -1360,7 +1360,7 @@ config("debug") {
   defines = [
     "DEBUG",
     "_DEBUG",
-    "DCHECK=1",
+    "IS_DCHECK",
   ]
 
   if (is_win) {
@@ -1379,7 +1379,6 @@ config("release") {
   defines = [
     "NDEBUG",
     "_NDEBUG",
-    "DCHECK=0",
   ]
 }
 

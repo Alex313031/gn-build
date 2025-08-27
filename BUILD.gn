@@ -13,7 +13,13 @@ group("gn_all") {
     # "//src:taskmgr",
     # "//src/glasswnd:glasswnd",
     # "//src/notepad_nt:notepad_nt",
-    "//src/picalc_win:picalc",
+    "//src/picalc_win:picalc_win",
+    "//src/misc:misc_all",
+    "//src/mdipad:multipad",
+    "//src/VFDTool:vfdtool",
+    "//src/picalc_win/libpicalc/gmp/gmp:gmp_all",
+    "//src/mini_chromium-refs_heads_cxx17:mini_chromium",
+    #"//src/frickpad:frickpad",
   ]
 }
 

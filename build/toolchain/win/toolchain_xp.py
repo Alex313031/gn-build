@@ -199,9 +199,10 @@ def _GetClangMscVersionFromYear(version_as_year):
   # Corresponds to the _MSC_VER value listed here:
   # https://docs.microsoft.com/en-us/cpp/preprocessor/predefined-macros
   year_to_version = {
-    '2013': '1800',
-    '2015': '1900',
-    '2017': '1910',
+    '2013': '1800', #v120
+    '2015': '1900', #v140
+    '2017': '1910', #v141 or v141_xp
+    # Override version for 2019/2022 since we will still be using the v141_xp toolchain
     '2019': '1910',
     '2022': '1910',
   }

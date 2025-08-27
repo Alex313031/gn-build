@@ -1,8 +1,9 @@
+import("//build/toolchain/toolchain.gni")
+import("//build/config/win/target_version.gni")
+
 if (is_clang) {
   import("//build/toolchain/clang.gni")
 }
-
-import("//build/config/win/target_version.gni")
 
 declare_args() {
   # Desired version of Visual Studio.
@@ -36,6 +37,18 @@ declare_args() {
 assert(visual_studio_version != "", "visual_studio_version must be non-empty")
 assert(visual_studio_path == "" || visual_studio_version != "latest",
        "You must set visual_studio_version if you set visual_studio_path")
+
+if (use_legacy_toolchain && clang_msc_ver == 0) {
+  if (visual_studio_version == "2013") {
+    clang_msc_ver = 1800
+  } else if (visual_studio_version == "2015") {
+    clang_msc_ver = 1900
+  } else if (visual_studio_version == "2017") {
+    clang_msc_ver = 1910
+  } else if (visual_studio_version == "2019" || visual_studio_version == "2022" || visual_studio_version == "latest") {
+    clang_msc_ver = 1910
+  }
+}
 
 if (is_clang) {
   _clang_base_path_arg = clang_base_path
@@ -107,11 +120,20 @@ msc_full_ver = toolchain_data.msc_full_ver
 if (defined(toolchain_data.clang_version)) {
   win_clang_version = toolchain_data.clang_version
 } else {
-  if (use_legacy_toolchain) {
-    win_clang_version = 180108
-  } else {
-    win_clang_version = 0
-  }
+  win_clang_version = 0
+}
+
+if (print_toolchain_info) {
+  print("visual_studio_version = " + visual_studio_version)
+  print("visual_studio_path = " + visual_studio_path)
+  print("windows_sdk_path = " + windows_sdk_path)
+
+  print("clang_base_path = " + _clang_base_path_arg)
+  print("win_clang_version = " + win_clang_version)
+
+  print("msc_ver = " + msc_ver)
+  print("msc_full_ver = " + msc_full_ver)
+  print("clang_msc_ver = " + _clang_msc_ver)
 }
 
 # current_toolchain_data: Settings specific to current_os/current_cpu
