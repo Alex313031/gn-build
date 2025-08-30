@@ -450,6 +450,7 @@ config("compiler_cpu_abi") {
     } else if (current_cpu == "x86") {
       cflags += [ "-m32" ]
       ldflags += [ "-m32" ]
+      cflags += [ "-mfpmath=sse" ]
     } else if (current_cpu == "arm") {
       if (is_clang && !is_android) {
         cflags += [ "--target=arm-linux-gnueabihf" ]
@@ -1492,6 +1493,6 @@ config("source_set_config") {
 config("no_default_lib") {
   defines = [ "NODEFAULTLIB" ]
   if (is_win) {
-    ldflags = [ "/NODEFAULTLIB" ]
+    ldflags = [ "/NODEFAULTLIB", ]
   }
 }

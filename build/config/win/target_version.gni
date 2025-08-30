@@ -133,7 +133,7 @@ declare_args() {
   # What windows version to target. Valid string values are
   win_ver = ""
 
-  # Never set these manually
+  # Never set these manually! They are used internally in .gni files only!
   is_win2k_build = false
   is_winxp_build = false
   is_win2003_build = false
@@ -145,7 +145,7 @@ declare_args() {
   is_win11_build = false
 }
 
-if (win_ver == "2K" || win_ver == "2000" || win_ver == "5.0") {
+if (win_ver == "2k" || win_ver == "2K" || win_ver == "2000" || win_ver == "5.0") {
   is_win2k_build = true
 } else if (win_ver == "xp" || win_ver == "XP" || win_ver == "5.1") {
   is_winxp_build = true
@@ -269,3 +269,5 @@ if (print_toolchain_info) {
   print("is_win10_build =", is_win10_build)
   print("is_win11_build =", is_win11_build)
 }
+
+assert(psapi_version != 0, "psapi_version was still 0!")

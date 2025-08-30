@@ -41,6 +41,11 @@ declare_args() {
 
   # Enable srict assertions, enforce language deprecations, warning are errors.
   strict_mode = false
+
+  # Whether to use dynamic C Runtime instead of linking in
+  # the static runtime (i.e. /MD instead of /MT). Static runtime
+  # is the default so that standalone .exes "just work".
+  use_dynamic_crt = false
 }
 
 if (is_win8_build) {
@@ -136,7 +141,7 @@ config("compiler") {
   # SIMD level
   if (current_cpu == "x86" || current_cpu == "x64") {
     if (is_clang) {
-      cflags += [ "-msse2" ]
+      cflags += [ "-mfpmath=sse", "-msse2" ]
     } else {
       cflags += [ "/arch:SSE2", ]
     }
@@ -217,15 +222,6 @@ config("runtime_library") {
     "__STD_C",
     "_CRT_RAND_S",
   ]
-
-  # Default PSAPI version
-  psapi_version = 2
-
-  if (use_legacy_toolchain) {
-    psapi_version = 1
-  } else {
-    psapi_version = 2
-  }
 
   if (!strict_mode) {
     defines += [
@@ -353,6 +349,7 @@ config("winver") {
     "_WIN64_WINNT=$win64_winnt_version",
     "_WIN32_IE=$win32_ie_version",
   ]
+  # No support for building drivers for Win2K as of yet.
   if (!is_win2k_build) {
     defines += [
       "NTDDI_VERSION=$ntddi_version",
@@ -454,8 +451,12 @@ config("default_crt") {
     # CRT in Visual Studio releases related to Windows store applications.
     configs = [ ":dynamic_crt" ]
   } else {
-    # Desktop Windows: static CRT.
-    configs = [ ":static_crt" ]
+    # Desktop Windows: default to static CRT.
+    if (!use_dynamic_crt) {
+      configs = [ ":static_crt" ]
+    } else {
+      configs = [ ":dynamic_crt" ]
+    }
   }
 }
 
@@ -479,18 +480,50 @@ config("static_crt") {
 
 # This is appended to the subsystem to specify a minimum version.
 # The number after the comma is the minimum required OS version.
-if (current_cpu == "x64") {
-  # 5.02 = Windows Server 2003/XP x64.
-  subsystem_version_suffix = ",5.02"
+if (current_cpu == "x64" || current_cpu == "x86") {
+  if (is_win2k_build) {
+    subsystem_version_suffix = ",5.00"
+  } else if (is_winxp_build) {
+    subsystem_version_suffix = ",5.01"
+  } else if (is_win2003_build) {
+    subsystem_version_suffix = ",5.02"
+  } else if (is_winvista_build) {
+    subsystem_version_suffix = ",6.00"
+  } else if (is_win7_build) {
+    subsystem_version_suffix = ",6.01"
+  } else if (is_win8_build) {
+    subsystem_version_suffix = ",6.02"
+  } else if (is_win81_build) {
+    subsystem_version_suffix = ",6.03"
+  } else if (is_win10_build) {
+    subsystem_version_suffix = ",10.0"
+  } else if (is_win11_build) {
+    subsystem_version_suffix = ",10.0"
+  }
 } else if (current_cpu == "arm") {
   # Windows ARM32 requires Windows 8.
-  subsystem_version_suffix = ",6.02"
+  if (is_win8_build) {
+    subsystem_version_suffix = ",6.02"
+  } else if (is_win81_build) {
+    subsystem_version_suffix = ",6.03"
+  } else if (is_win10_build) {
+    subsystem_version_suffix = ",10.0"
+  } else if (is_win11_build) {
+    subsystem_version_suffix = ",10.0"
+  } else {
+    subsystem_version_suffix = ",6.02"
+  }
 } else if (current_cpu == "arm64") {
   # Windows ARM64 requires Windows 10.
   subsystem_version_suffix = ",10.0"
 } else {
-  # 5.01 = Windows XP, for x86 32 bit builds.
+  # 5.01 = Default to XP otherwise
+  print("Subsystem being set to default 5.01! This is probably a mistake")
   subsystem_version_suffix = ",5.01"
+}
+
+if (print_toolchain_info) {
+  print("subsystem_version_suffix = " + subsystem_version_suffix)
 }
 
 config("console") {
