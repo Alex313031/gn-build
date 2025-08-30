@@ -2,6 +2,8 @@
 
 @ECHO OFF
 
+ECHO GN
+
 SET CWD=%~dp0
 
 SET TOOLSDIR=%CWD%\tools\win

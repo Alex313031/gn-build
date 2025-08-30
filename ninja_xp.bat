@@ -2,10 +2,10 @@
 
 @ECHO OFF
 
-ECHO NINJA
+ECHO NINJA-XP
 
 SET CWD=%~dp0
 
 SET TOOLSDIR=%CWD%\tools\win
 
-%TOOLSDIR%\ninja.exe %*
+%TOOLSDIR%\ninja_xp.exe %*
