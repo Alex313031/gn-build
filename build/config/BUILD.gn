@@ -1221,7 +1221,11 @@ config("symbols") {
   if (is_win) {
     if (enable_iterator_debugging) {
       if (iterator_debug_level != -1) {
-        defines = [ "_ITERATOR_DEBUG_LEVEL=${iterator_debug_level}", "_HAS_ITERATOR_DEBUGGING=1", ]
+        if (iterator_debug_level == 2) {
+          defines = [ "_ITERATOR_DEBUG_LEVEL=${iterator_debug_level}", "_HAS_ITERATOR_DEBUGGING=1", ]
+        } else {
+          defines = [ "_ITERATOR_DEBUG_LEVEL=${iterator_debug_level}", "_HAS_ITERATOR_DEBUGGING=0", ]
+        }
       } else {
         defines = [ "_ITERATOR_DEBUG_LEVEL=2", "_HAS_ITERATOR_DEBUGGING=1", ]
       }
@@ -1388,20 +1392,8 @@ config("release") {
 # This config defines the default libraries applied to all targets.
 config("default_libs") {
   if (is_win) {
+    # Moved config from here into //build/config/win:default_libs
     libs = []
-    if (current_os == "winuwp") {
-      # These libraries are needed for Windows UWP (i.e. store apps).
-      libs += [
-        "dloadhelper.lib",
-        "WindowsApp.lib",
-      ]
-    } else {
-      # These libraries are not compatible with Windows UWP (i.e. store apps.)
-      libs += [
-        "delayimp.lib",
-        "kernel32.lib",
-      ]
-    }
   } else if (is_android) {
     libs = [
       "dl",

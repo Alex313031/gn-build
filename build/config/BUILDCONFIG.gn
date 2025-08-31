@@ -312,6 +312,7 @@ if (is_win) {
     "//build/config/win:unicode",
     "//build/config/win:utf8",
     "//build/config/win:default_crt",
+    "//build/config/win:default_libs",
     "//build/config/win:nominmax",
     "//build/config/win:winver",
     "//build/config/win:vs_code_analysis",

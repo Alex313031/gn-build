@@ -143,6 +143,7 @@ declare_args() {
   is_win81_build = false
   is_win10_build = false
   is_win11_build = false
+  subsystem_version_suffix = ""
 }
 
 if (win_ver == "2k" || win_ver == "2K" || win_ver == "2000" || win_ver == "5.0") {
@@ -165,6 +166,8 @@ if (win_ver == "2k" || win_ver == "2K" || win_ver == "2000" || win_ver == "5.0")
   is_win11_build = true
 } else if (win_ver == "") {
   print("WARNING: win_ver was not set!")
+  print("Setting win_ver constants to default Win7 target values.")
+  is_win7_build = true
 }
 
 declare_args() {
@@ -182,7 +185,7 @@ declare_args() {
 
   # Whether to use common controls version 6.0 via Manifest
   # Note that due to contraints, comctl32 is always linked in.
-  use_common_controls = !is_win2k_build
+  use_common_controls = !is_win2k_build && !is_winxp_build && !is_win2003_build
 }
 
 if (is_win2k_build) {
@@ -249,14 +252,13 @@ if (is_win2k_build) {
   ntddi_version = NTDDI_WIN11_CO
   psapi_version = 2
 } else {
-  print("Setting win_ver constants to default Win7 target values.")
-  winver_version = _WIN32_WINNT_WIN7
-  win32_winnt_version = _WIN32_WINNT_WIN7
-  win64_winnt_version = _WIN32_WINNT_WIN7
-  win32_ie_version = _WIN32_IE_WIN7
-  ntddi_version = NTDDI_WIN7
-  psapi_version = 2
 }
+
+assert(is_win2k_build || is_winxp_build ||
+       is_win2003_build || is_winvista_build ||
+       is_win7_build || is_win8_build ||
+       is_win81_build || is_win10_build ||
+       is_win11_build, "winver not set!")
 
 if (print_toolchain_info) {
   print("is_win2k_build =", is_win2k_build)
