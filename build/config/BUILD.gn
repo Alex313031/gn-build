@@ -1327,7 +1327,7 @@ config("minimal_symbols") {
 config("no_symbols") {
   if (is_win) {
     if (symbol_level == 0) {
-      assert(iterator_debug_level == -1, "iterator_debug_level cannot be set when symbol_level = 0")
+      assert(iterator_debug_level == -1 || iterator_debug_level == 0, "iterator_debug_level cannot be set above 0 when symbol_level = 0")
     }
     defines = [ "_ITERATOR_DEBUG_LEVEL=0", "_HAS_ITERATOR_DEBUGGING=0", ]
   } else {
