@@ -453,6 +453,12 @@ template("target_combo_toolchains") {
     sys_include_flags = "${tgt_toolchain_data.include_flags_imsvc}"
     sys_lib_flags = "${tgt_toolchain_data.libpath_flags}"
 
+    if (print_toolchain_info) {
+      print("cl =", cl)
+      print("sys_include_flags =", tgt_toolchain_data.include_flags_imsvc)
+      print("sys_lib_flags =", tgt_toolchain_data.libpath_flags)
+    }
+
     toolchain_args = {
       current_os = "win"
       current_cpu = cpu

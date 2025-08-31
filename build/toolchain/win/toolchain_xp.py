@@ -68,7 +68,8 @@ def _ExtractImportantEnvironment(cpuname):
   if cpuname == 'x86':
     env_file = here / 'env_xp_x86.txt'
   elif cpuname == 'x64':
-    env_file = here / 'env_xp_x64.txt'
+    #env_file = here / 'env_xp_x64.txt'
+    env_file = here / 'env_xp_x86.txt'
   else:
     env_file = here / 'env_xp_x86.txt'
 
@@ -404,7 +405,7 @@ def SetupToolchainTargetCombos(vs_path, sdk_version=None, force=True):
       print('vc_lib_path = ' + gn_helpers.ToGNString(vc_lib_path))
     # Possible atlmfc library path gets introduced in the future for store thus
     # output result if a result exists.
-    if vc_lib_atlmfc_path != '' and PRINT_DEBUG:
+    if PRINT_DEBUG:
       print('vc_lib_atlmfc_path = ' + gn_helpers.ToGNString(vc_lib_atlmfc_path))
     assert vc_lib_um_path
     if PRINT_DEBUG:
