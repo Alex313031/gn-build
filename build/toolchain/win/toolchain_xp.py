@@ -204,8 +204,8 @@ def _GetClangMscVersionFromYear(version_as_year):
     '2015': '1900', #v140
     '2017': '1910', #v141 or v141_xp
     # Override version for 2019/2022 since we will still be using the v141_xp toolchain
-    '2019': '1910',
-    '2022': '1910',
+    '2019': '1915',
+    '2022': '1916',
   }
   if version_as_year not in year_to_version:
     raise Exception(('Visual Studio version %s (from version_as_year)'

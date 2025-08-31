@@ -52,7 +52,11 @@ if (use_legacy_toolchain && clang_msc_ver == 0) {
 
 if (is_clang) {
   _clang_base_path_arg = clang_base_path
-  _clang_msc_ver = "" + clang_msc_ver
+  if (use_legacy_toolchain) {
+    _clang_msc_ver = ""
+  } else {
+    _clang_msc_ver = "" + clang_msc_ver
+  }
 } else {
   _clang_base_path_arg = ""
   _clang_msc_ver = ""
@@ -133,7 +137,8 @@ if (print_toolchain_info) {
 
   print("msc_ver = " + msc_ver)
   print("msc_full_ver = " + msc_full_ver)
-  print("clang_msc_ver = " + _clang_msc_ver)
+  print("clang_msc_ver = " + clang_msc_ver)
+  print("_clang_msc_ver = " + _clang_msc_ver)
 }
 
 # current_toolchain_data: Settings specific to current_os/current_cpu
