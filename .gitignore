@@ -27,3 +27,6 @@ Thumbs.db
 
 # LLVM Toolchain
 /tools/llvm/
+
+# Private scripts
+/build_private.bat
