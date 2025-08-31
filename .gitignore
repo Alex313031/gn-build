@@ -29,4 +29,5 @@ Thumbs.db
 /tools/llvm/
 
 # Private scripts
-/build_private.bat
+/build_debug.bat
+/build_release.bat
