@@ -17,8 +17,9 @@ group("gn_all") {
     "//src/misc:misc_all",
     "//src/mdipad:multipad",
     "//src/VFDTool:vfdtool",
-    "//src/picalc_win/libpicalc/gmp/gmp:gmp_all",
-    "//src/mini_chromium-refs_heads_cxx17:mini_chromium",
+    "//src/picalc_win/libpicalc/gmp:gmp_all",
+    "//src/cr_base:mini_chromium",
+    "//src/libnt5:libnt5_all",
     #"//src/frickpad:frickpad",
   ]
 }
