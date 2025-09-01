@@ -1,5 +1,8 @@
-# List of possible arguments:
-
+GN
+WARNING: win_ver was not set!
+Setting win_ver constants to default Win7 target values.
+WARNING: win_ver was not set!
+Setting win_ver constants to default Win7 target values.
 action_pool_depth
     Current value (from the default) = 0
       From //build/toolchain/BUILD.gn:9
@@ -14,7 +17,7 @@ archive_seed_corpus
 
 auto_profile_path
     Current value (from the default) = ""
-      From //build/config/BUILD.gn:69
+      From //build/config/BUILD.gn:77
 
     AFDO (Automatic Feedback Directed Optimizer) is a form of profile-guided
     optimization that GCC supports. It used by ChromeOS in their official
@@ -23,7 +26,7 @@ auto_profile_path
 
 cached_toolchain_data
     Current value (from the default) = ""
-      From //build/toolchain/win/settings.gni:31
+      From //build/toolchain/win/settings.gni:34
 
     Allows us to avoid multiple toolchain.py invocations for multi-toolchain builds.
 
@@ -35,7 +38,7 @@ clang_base_path
 
 clang_msc_ver
     Current value (from the default) = 0
-      From //build/toolchain/win/settings.gni:28
+      From //build/toolchain/win/settings.gni:31
 
     Microsoft compiler version number clang-cl will report in _MSC_VER
     (Defaults to the default version associated with the chosen VS version.)
@@ -99,7 +102,7 @@ disable_precompiled_headers
 
 enable_full_stack_frames_for_profiling
     Current value (from the default) = false
-      From //build/config/BUILD.gn:38
+      From //build/config/BUILD.gn:42
 
     Compile in such a way as to make it possible for the profiler to unwind full
     stack frames. Setting this flag has a large effect on the performance of the
@@ -109,7 +112,7 @@ enable_full_stack_frames_for_profiling
 
 enable_iterator_debugging
     Current value (from the default) = false
-      From //build/config/BUILD.gn:49
+      From //build/config/BUILD.gn:53
 
     When set (the default) enables C++ iterator debugging in debug builds.
     Iterator debugging is always off in release builds (technically, this flag
@@ -123,28 +126,28 @@ enable_iterator_debugging
 
 enable_lto
     Current value (from the default) = false
-      From //build/config/compiler.gni:15
+      From //build/config/compiler.gni:16
 
     Enable Link Time Optimization in optimized builds (output programs run
     faster, but linking is up to 5-20x slower).
 
 enable_profiling
     Current value (from the default) = false
-      From //build/config/compiler.gni:11
+      From //build/config/compiler.gni:12
 
     Compile in such a way as to enable profiling of the generated code. For
     example, don't omit the frame pointer and leave in symbols.
 
 enable_stack_protection
     Current value (from the default) = true
-      From //build/config/BUILD.gn:77
+      From //build/config/BUILD.gn:85
 
     Control stack protection guards. There should be no need to disable this.
     Note: Only honored on POSIX systems.
 
 exclude_unwind_tables
     Current value (from the default) = false
-      From //build/config/BUILD.gn:56
+      From //build/config/BUILD.gn:64
 
     Omit unwind support in official builds to save space.
     We can use breakpad for these builds.
@@ -159,7 +162,7 @@ external
 
 extra_asmflags
     Current value (from the default) = ""
-      From //build/config/BUILD.gn:82
+      From //build/config/BUILD.gn:90
 
     Optional list containing extra assembler arguments.
     Like 'asmflags' this value is passed to all tools that take
@@ -167,7 +170,7 @@ extra_asmflags
 
 extra_cflags
     Current value (from the default) = ""
-      From //build/config/BUILD.gn:87
+      From //build/config/BUILD.gn:95
 
     Optional list containing extra compiler arguments.
     Like 'cflags' this value is passed to the C, C++, Objective C, and
@@ -175,41 +178,41 @@ extra_cflags
 
 extra_cflags_c
     Current value (from the default) = ""
-      From //build/config/BUILD.gn:91
+      From //build/config/BUILD.gn:99
 
     Optional list containing extra compiler arguments.
     Like 'cflags_c' this value is only passed to the C compiler.
 
 extra_cflags_cc
     Current value (from the default) = ""
-      From //build/config/BUILD.gn:95
+      From //build/config/BUILD.gn:103
 
     Optional list containing extra compiler arguments.
     Like 'cflags_cc' this value is only passed to the C++ compiler.
 
 extra_cflags_objc
     Current value (from the default) = ""
-      From //build/config/BUILD.gn:99
+      From //build/config/BUILD.gn:107
 
     Optional list containing extra compiler arguments.
     Like 'cflags_objc' this value is only passed to the Objective C compiler.
 
 extra_cflags_objcc
     Current value (from the default) = ""
-      From //build/config/BUILD.gn:103
+      From //build/config/BUILD.gn:111
 
     Optional list containing extra compiler arguments.
     Like 'cflags_objcc' this value is only passed to the Objective C++ compiler.
 
 extra_ldflags
     Current value (from the default) = ""
-      From //build/config/BUILD.gn:106
+      From //build/config/BUILD.gn:114
 
     Optional list containing extra linker arguments.
 
 fatal_linker_warnings
     Current value (from the default) = true
-      From //build/config/BUILD.gn:63
+      From //build/config/BUILD.gn:71
 
     Enable fatal linker warnings.
 
@@ -224,14 +227,14 @@ gcc_version
 
 gdb_index
     Current value (from the default) = false
-      From //build/config/BUILD.gn:60
+      From //build/config/BUILD.gn:68
 
     If true, gold linker will save symbol table inside object files.
     This speeds up gdb startup by 60%
 
 gold_path
     Current value (from the default) = ""
-      From //build/config/BUILD.gn:52
+      From //build/config/BUILD.gn:60
 
     When we are going to use gold we need to find it.
 
@@ -271,13 +274,20 @@ is_clang
 
 is_component_build
     Current value (from the default) = true
-      From //build/config/BUILD.gn:117
+      From //build/config/static_shared.gni:9
 
 is_debug
     Current value (from the default) = true
       From //build/config/BUILDCONFIG.gn:157
 
     Debug build. Enabling official builds automatically sets is_debug to false.
+
+is_full_optimization_build
+    Current value (from the default) = false
+      From //build/config/compiler_opt.gni:17
+
+    Turn this on to have compiler optimization turned up to the max.
+    Such as using -O3 instead of -O2 for CFLAGS.
 
 is_hwasan
     Current value (from the default) = false
@@ -308,6 +318,16 @@ is_official_build
     release (!is_debug). This might be better expressed as a tri-state
     (debug, release, official) but for historical reasons there are two
     separate flags.
+
+is_raspi
+    Current value (from the default) = false
+      From //build/config/compiler_opt.gni:20
+
+    Whether to use Raspberry Pi specific optimizations.
+
+is_static_build
+    Current value (from the default) = false
+      From //build/config/static_shared.gni:13
 
 is_syzyasan
     Current value (from the default) = false
@@ -355,13 +375,58 @@ is_ubsan_vptr
 
     Compile for Undefined Behaviour Sanitizer's vptr checks.
 
+is_win10_build
+    Current value (from the default) = false
+      From //build/config/win/target_version.gni:144
+
+is_win11_build
+    Current value (from the default) = false
+      From //build/config/win/target_version.gni:145
+
+is_win2003_build
+    Current value (from the default) = false
+      From //build/config/win/target_version.gni:139
+
+is_win2k_build
+    Current value (from the default) = false
+      From //build/config/win/target_version.gni:137
+
+    Never set these manually! They are used internally in .gni files only!
+
+is_win7_build
+    Current value (from the default) = false
+      From //build/config/win/target_version.gni:141
+
+is_win81_build
+    Current value (from the default) = false
+      From //build/config/win/target_version.gni:143
+
+is_win8_build
+    Current value (from the default) = false
+      From //build/config/win/target_version.gni:142
+
 is_win_fastlink
     Current value (from the default) = false
-      From //build/config/compiler.gni:38
+      From //build/config/compiler.gni:39
 
     Tell VS to create a PDB that references information in .obj files rather
     than copying it all. This should improve linker performance. mspdbcmf.exe
     can be used to convert a fastlink pdb to a normal one.
+
+is_winvista_build
+    Current value (from the default) = false
+      From //build/config/win/target_version.gni:140
+
+is_winxp_build
+    Current value (from the default) = false
+      From //build/config/win/target_version.gni:138
+
+iterator_debug_level
+    Current value (from the default) = -1
+      From //build/config/BUILD.gn:57
+
+    Select the _ITERATOR_DEBUG_LEVEL define level when
+    enable_iterator_debugging = true
 
 linkrepro_root_dir
     Current value (from the default) = ""
@@ -380,6 +445,14 @@ linkrepro_root_dir
    
     See crbug.com/669854.
 
+mini_chromium_is_chromeos_ash
+    Current value (from the default) = false
+      From //src/cr_base/build/platform.gni:32
+
+mini_chromium_is_chromeos_lacros
+    Current value (from the default) = false
+      From //src/cr_base/build/platform.gni:31
+
 msan_track_origins
     Current value (from the default) = 2
       From //build/config/sanitizers/sanitizers.gni:36
@@ -388,18 +461,32 @@ msan_track_origins
     0 - no tracking, 1 - track only the initial allocation site, 2 - track the
     chain of stores leading from allocation site to use site.
 
+ntddi_version
+    Current value (from the default) = ""
+      From //build/config/win/target_version.gni:178
+
 optimize_debug
     Current value (from the default) = false
-      From //build/config/compiler.gni:18
+      From //build/config/compiler.gni:19
 
     Enable some optimizations that don't interfere with debugging.
 
 optimize_for_fuzzing
     Current value (from the default) = false
-      From //build/config/BUILD.gn:73
+      From //build/config/BUILD.gn:81
 
     Optimize for coverage guided fuzzing (balance between speed and number of
     branches). Can be also used to remove non-determinism and other issues.
+
+print_toolchain_info
+    Current value (from the default) = false
+      From //build/toolchain/toolchain.gni:10
+
+    Print toolchain info to the console when running gn
+
+psapi_version
+    Current value (from the default) = 0
+      From //build/config/win/target_version.gni:179
 
 sanitizer_coverage_flags
     Current value (from the default) = ""
@@ -414,9 +501,19 @@ sanitizer_coverage_flags
     Default value when unset and use_sanitizer_coverage=true:
         trace-pc-guard,indirect-calls
 
+strict_mode
+    Current value (from the default) = false
+      From //build/config/win/BUILD.gn:43
+
+    Enable srict assertions, enforce language deprecations, warning are errors.
+
+subsystem_version_suffix
+    Current value (from the default) = ""
+      From //build/config/win/target_version.gni:146
+
 symbol_level
     Current value (from the default) = 2
-      From //build/toolchain/toolchain.gni:14
+      From //build/toolchain/toolchain.gni:17
 
     How many symbols to include in the build. This affects the performance of
     the build since the symbols are large and dealing with them is slow.
@@ -425,16 +522,20 @@ symbol_level
       0 means no symbols.
 
 target_cpu
-    Current value (from the default) = ""
+    Current value = "x64"
+      From //out/test/args.gn:2
+    Overridden from the default = ""
       (Internally set; try `gn help target_cpu`.)
 
 target_os
-    Current value (from the default) = ""
+    Current value = "win"
+      From //out/test/args.gn:1
+    Overridden from the default = ""
       (Internally set; try `gn help target_os`.)
 
 target_winuwp_family
     Current value (from the default) = "app"
-      From //build/config/win/BUILD.gn:32
+      From //build/config/win/BUILD.gn:34
 
     possible values:
       "app" - Windows Store Applications
@@ -444,8 +545,8 @@ target_winuwp_family
       "desktop" - Windows Desktop Applications
 
 target_winuwp_version
-    Current value (from the default) = "10"
-      From //build/config/win/BUILD.gn:24
+    Current value (from the default) = ""
+      From //build/config/win/BUILD.gn:26
 
     possible values for target_winuwp_version:
       "10" - Windows UWP 10
@@ -457,6 +558,48 @@ use_afl
       From //build/config/sanitizers/sanitizers.gni:76
 
     Compile for fuzzing with AFL.
+
+use_avx
+    Current value (from the default) = false
+      From //build/config/compiler_opt.gni:81
+
+    AVX
+    Normal Thorium baseline
+    Present since Sandy Bridge (2011 2nd Gen. Core i series)
+    and AMD Bulldozer (2012 AMD FX).
+    Requires Windows 7 SP1 / Linux 2.6.30 or later to use.
+    Uses new 128 bit registers and CPU blocks; a new era of SIMD.
+    Includes AES and PCLMUL `-maes -mpclmul -mavx`
+
+use_avx2
+    Current value (from the default) = false
+      From //build/config/compiler_opt.gni:89
+
+    AVX2 (x86-64-v3)
+    Second generation AVX, expanded to 256-bit registers.
+    Present since Haswell (4th Gen. Core i series), and
+    AMD Excavator (4th Gen. refinement of Bulldozer cores) and 
+    Zen (1st Gen. Ryzen).
+    Includes FMA3 `-mfma -mavx2` (`-ffp-contract` see below at FMA section)
+
+use_avx512
+    Current value (from the default) = false
+      From //build/config/compiler_opt.gni:98
+
+    AVX-512
+    Third generation AVX, expanded to 512-bit registers.
+    Present since Skylake (Specifically Skylake-X "Extreme Edition"
+    processors), and AMD Zen 4 (4th Gen. Ryzen 7000).
+    Only uses AVX-512 instructions common to all processors.
+    `-mavx512f -mavx512cd -mavx512vl -mavx512bw -mavx512dq
+     -mf16c -mlzcnt -mbmi2`
+
+use_bolt
+    Current value (from the default) = false
+      From //build/config/compiler_opt.gni:28
+
+    Whether to enable LLVM's BOLT optimizations.
+    See https://github.com/llvm/llvm-project/blob/main/bolt/README.md
 
 use_cfi_cast
     Current value (from the default) = false
@@ -496,9 +639,16 @@ use_clang_static_analyzer
 
     Uses the Clang static analysis tools during compilation.
 
+use_common_controls
+    Current value (from the default) = true
+      From //build/config/win/target_version.gni:188
+
+    Whether to use common controls version 6.0 via Manifest
+    Note that due to contraints, comctl32 is always linked in.
+
 use_debug_fission
     Current value (from the default) = false
-      From //build/config/compiler.gni:30
+      From //build/config/compiler.gni:31
 
     use_debug_fission: whether to use split DWARF debug info
     files. This can reduce link time significantly, but is incompatible
@@ -518,24 +668,48 @@ use_drfuzz
     Compile for fuzzing with Dr. Fuzz
     See http://www.chromium.org/developers/testing/dr-fuzz
 
+use_dynamic_crt
+    Current value (from the default) = false
+      From //build/config/win/BUILD.gn:48
+
+    Whether to use dynamic C Runtime instead of linking in
+    the static runtime (i.e. /MD instead of /MT). Static runtime
+    is the default so that standalone .exes "just work".
+
 use_external_fuzzing_engine
     Current value (from the default) = false
       From //build/config/sanitizers/sanitizers.gni:79
 
     Compile for fuzzing with an external engine (e.g., Grammarinator).
 
+use_fma
+    Current value (from the default) = false
+      From //build/config/compiler_opt.gni:107
+
+    FMA
+    "Fused Multiply Add" operations
+    Present since Haswell and AMD Piledriver (2nd Gen. refinement
+    of Bulldozer).
+    `-mfma -ffp-contract=fast` (use -mfma3 -mfma4 for Piledriver)
+
 use_gold
     Current value (from the default) = false
-      From //build/config/compiler.gni:33
+      From //build/config/compiler.gni:34
 
     Whether to use the gold linker from binutils instead of lld or bfd.
 
 use_incremental_ltcg
     Current value (from the default) = false
-      From //build/config/BUILD.gn:31
+      From //build/config/BUILD.gn:35
 
     Whether or not we should turn on incremental LTCG. Only affects the VS
     Windows build.
+
+use_legacy_toolchain
+    Current value (from the default) = false
+      From //build/config/win/target_version.gni:184
+
+    Whether to use the Windows XP/2003 compatible toolchain
 
 use_libfuzzer
     Current value (from the default) = false
@@ -546,9 +720,10 @@ use_libfuzzer
 
 use_lld
     Current value (from the default) = false
-      From //build/toolchain/clang.gni:13
+      From //build/toolchain/clang.gni:14
 
     Set to true to use lld, the LLVM linker.
+    Otherwise, use the GCC ld or MSVC link.exe.
 
 use_locally_built_instrumented_libraries
     Current value (from the default) = false
@@ -556,6 +731,13 @@ use_locally_built_instrumented_libraries
 
     Use dynamic libraries instrumented by one of the sanitizers instead of the
     standard system libraries. Set this flag to build the libraries from source.
+
+use_polly
+    Current value (from the default) = false
+      From //build/config/compiler_opt.gni:24
+
+    Whether to enable LLVM's Polly optimizations.
+    See https://polly.llvm.org/
 
 use_sanitizer_configs_without_instrumentation
     Current value (from the default) = false
@@ -571,9 +753,55 @@ use_sanitizer_coverage
 
     Enable -fsanitize-coverage.
 
+use_sse2
+    Current value (from the default) = false
+      From //build/config/compiler_opt.gni:46
+
+    SSE2
+    Normal x64 compiler baseline, present since Willamette (Original
+    2001 Pentium 4) and AMD SledgeHammer (1st Gen. Opteron) and
+    the Athlon 64. Big step from MMX, x87, and SSE (i.e. SSE1)
+    Baseline requirement to run Windows since update KB4103718
+    for Windows 7 SP1/Server 2008 R2 SP1/Home Server 2011.
+
+use_sse3
+    Current value (from the default) = true
+      From //build/config/compiler_opt.gni:54
+
+    SSE3
+    Normal Chromium baseline, present since Prescott (2004 Pentium 4)
+    and AMD SanDiego (2nd Gen. Opteron).
+    Only applicable to 32 Bit Windows and Linux builds, where
+    setting it to false allows making an SSE2 build. (`-mmmx -msse2`)
+    `-msse3`
+
+use_sse41
+    Current value (from the default) = false
+      From //build/config/compiler_opt.gni:63
+
+    SSE4.1
+    Normal PrimoBrowser baseline
+    Normal ThoriumOS baseline because Core 2 Duo is the lowest
+    hardware that other CrOS subsystems like drivers support.
+    Present since Penryn (2007 45nm Core 2 Duo die shrink), and
+    AMD Jaguar (2013 Athlon CPUs) and Bulldozer (2012 AMD FX).
+    Includes SSSE3 since all SSSE3 `-mssse3 -msse4.1`
+
+use_sse42
+    Current value (from the default) = false
+      From //build/config/compiler_opt.gni:72
+
+    SSE4.2 (x86-64-v2)
+    Present since Nehalem (2009 1st Generation Core i series), and
+    the same AMD CPUs as above.
+    Normal LaCrOS baseline since Sept 2023.
+    See https://bugs.chromium.org/p/chromium/issues/detail?id=1475858
+    Baseline for Windows since Windows 10 24H2.
+    `-msse4.2`
+
 use_thin_lto
     Current value (from the default) = false
-      From //build/toolchain/clang.gni:20
+      From //build/toolchain/clang.gni:21
 
     Enables the experimental support of ThinLTO that links 3x-10x faster but
     (as of now) does not have all the important optimizations such us
@@ -583,7 +811,7 @@ use_thin_lto
 
 use_vs_code_analysis
     Current value (from the default) = false
-      From //build/config/win/BUILD.gn:18
+      From //build/config/win/BUILD.gn:20
 
     Set this to true to enable static analysis through Visual Studio's
     /analyze. This dramatically slows compiles and reports thousands of
@@ -592,7 +820,7 @@ use_vs_code_analysis
 
 visual_studio_path
     Current value (from the default) = ""
-      From //build/toolchain/win/settings.gni:19
+      From //build/toolchain/win/settings.gni:22
 
     The path of your MSVC installation.
    
@@ -601,7 +829,7 @@ visual_studio_path
 
 visual_studio_version
     Current value (from the default) = "latest"
-      From //build/toolchain/win/settings.gni:13
+      From //build/toolchain/win/settings.gni:16
 
     Desired version of Visual Studio.
     If visual_studio_path is set, this must be
@@ -611,23 +839,45 @@ visual_studio_version
     choosing the highest version (visual_studio_path must be unset in
     this case).
 
+win32_ie_version
+    Current value (from the default) = ""
+      From //build/config/win/target_version.gni:177
+
+win32_winnt_version
+    Current value (from the default) = ""
+      From //build/config/win/target_version.gni:175
+
+win64_winnt_version
+    Current value (from the default) = ""
+      From //build/config/win/target_version.gni:176
+
 win_compiler_timing
     Current value (from the default) = false
-      From //build/config/win/BUILD.gn:38
+      From //build/config/win/BUILD.gn:40
 
     Turn this on to have the compiler output extra timing information.
 
 win_linker_timing
     Current value (from the default) = false
-      From //build/config/win/BUILD.gn:35
+      From //build/config/win/BUILD.gn:37
 
     Turn this on to have the linker output extra timing information.
 
+win_ver
+    Current value (from the default) = ""
+      From //build/config/win/target_version.gni:134
+
+    What windows version to target. Valid string values are
+
 windows_sdk_version
     Current value (from the default) = "default"
-      From //build/toolchain/win/settings.gni:24
+      From //build/toolchain/win/settings.gni:27
 
     Windows SDK version to use.
-    Can either be a full Windows 10 SDK number (e.g. 10.0.10240.0),
+    Can either be a full Windows 10 SDK number (e.g. 10.0.19041.0),
     "8.1" for the Windows 8.1 SDK or "default" to use the VS default version.
+
+winver_version
+    Current value (from the default) = ""
+      From //build/config/win/target_version.gni:174
 
