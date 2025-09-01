@@ -1372,10 +1372,12 @@ if (is_ios || is_mac) {
 
 config("debug") {
   defines = [
-    "DEBUG",
     "_DEBUG",
     "IS_DCHECK",
   ]
+  if (is_posix) {
+    defines += [ "DEBUG", ]
+  }
 
   if (is_win) {
     if (!enable_iterator_debugging) {
