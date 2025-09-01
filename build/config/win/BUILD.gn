@@ -141,7 +141,18 @@ config("compiler") {
   # SIMD level
   if (current_cpu == "x86" || current_cpu == "x64") {
     if (is_clang) {
-      cflags += [ "-mfpmath=sse", "-msse2" ]
+      if (current_cpu == "x86") {
+        cflags += [ "-mfpmath=sse", ]
+      }
+      cflags += [
+        "-mmmx",
+        "-mfxsr",
+        "-msse",
+        "-msse2"
+      ]
+      if (is_win) {
+        cflags += [ "/arch:SSE2", ]
+      }
     } else {
       cflags += [ "/arch:SSE2", ]
     }
