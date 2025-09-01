@@ -195,8 +195,20 @@ config("compiler") {
 # Sets the default source file encoding to UTF-8.
 # Without this, the system code page is used.
 config("utf8") {
-  if (msc_full_ver >= 190000000) {
-    cflags = [ "/utf-8" ]
+  if (is_win) {
+    # See https://learn.microsoft.com/en-us/cpp/build/reference/utf-8-set-source-and-executable-character-sets-to-utf-8
+    if (msc_full_ver >= 190000000) {
+      cflags = [
+        "/source-charset:utf-8",
+        "/execution-charset:utf-8",
+        "/validate-charset",
+        "/utf-8"
+      ]
+    }
+  } else {
+    # GCC flags. Currently LLVM only supports UTF-8.
+    # See https://github.com/llvm/llvm-project/issues/39211
+    cflags = [ "-finput_charset=UTF-8" ]
   }
 }
 
@@ -225,12 +237,19 @@ config("runtime_library") {
 
   if (!strict_mode) {
     defines += [
-      "_CRT_SECURE_NO_DEPRECATE",
-      # "_CRT_SECURE_NO_WARNINGS",
-      "_SCL_SECURE_NO_DEPRECATE",
+      "_CRT_SECURE_NO_DEPRECATE", # Dont deprecate CRT functions
+      "_CRT_SECURE_NO_WARNINGS", # Dont warn about CRT functions
+      "_SCL_SECURE_NO_DEPRECATE", # Dont deprecate stdlib functions
+      "_ATL_SECURE_NO_DEPRECATE", # Dont deprecate ATL functions
+      "_AFX_SECURE_NO_DEPRECATE", # Dont deprecate MFC functions
       "_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH", # Allow non-standard compilers and old compiler versions
     ]
   } else {
+    # Rename certain functions with _s suffixes for secure Win32 equivalents.
+    # See https://learn.microsoft.com/en-us/cpp/c-runtime-library/secure-template-overloads
+    defines += [
+      "_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES"
+    ]
     cflags += [ "/permissive-", ]
   }
 
