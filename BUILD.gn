@@ -2,46 +2,8 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-group("gn_all") {
+group("all") {
   testonly = true
 
-  deps = [ ":tests", ]
-
-  deps += [
-    # Place your deps tree to your code here
-    # so that GN knows about it!
-    # "//src:taskmgr",
-    # "//src/glasswnd:glasswnd",
-    # "//src/notepad_nt:notepad_nt",
-    "//src/picalc_win:picalc_win",
-    "//src/misc:misc_all",
-    "//src/mdipad:multipad",
-    "//src/VFDTool:vfdtool",
-    "//src/picalc_win/libpicalc/gmp:gmp_all",
-    "//src/cr_base:mini_chromium",
-    "//src/libnt5:libnt5_all",
-    #"//src/frickpad:frickpad",
-  ]
-}
-
-group("tests") {
-  testonly = true
-
-  deps = [
-    "//src/test/:hello_all",
-  ]
-
-  if (is_win) {
-    if (is_clang) {
-      deps += [
-        "//src/test/defapp/:defapp(//build/toolchain/win:clang_x64)",
-        "//src/test/defapp/:defapp(//build/toolchain/win:clang_x86)",
-      ]
-    } else {
-      deps += [
-        "//src/test/defapp/:defapp(//build/toolchain/win:x64)",
-        "//src/test/defapp/:defapp(//build/toolchain/win:x86)",
-      ]
-    }
-  }
+  public_deps = [ "//src:gn_all" ]
 }

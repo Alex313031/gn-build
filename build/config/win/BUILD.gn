@@ -258,20 +258,25 @@ config("runtime_library") {
   if (!strict_mode) {
     defines += [
       "_CRT_SECURE_NO_DEPRECATE", # Dont deprecate CRT functions
-      #"_CRT_NONSTDC_NO_DEPRECATE", # Dont deprecate non-standard C syntax
+      "_CRT_NONSTDC_NO_DEPRECATE", # Dont deprecate non-standard C syntax
       "_CRT_SECURE_NO_WARNINGS", # Dont warn about CRT functions
       "_SCL_SECURE_NO_DEPRECATE", # Dont deprecate stdlib functions
       "_ATL_SECURE_NO_DEPRECATE", # Dont deprecate ATL functions
       "_AFX_SECURE_NO_DEPRECATE", # Dont deprecate MFC functions
       "_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH", # Allow non-standard compilers and old compiler versions
     ]
+    if (is_clang || msc_full_ver >= 192800000) {
+      cflags += [ "/permissive", ]
+    }
   } else {
     # Rename certain functions with _s suffixes for secure Win32 equivalents.
     # See https://learn.microsoft.com/en-us/cpp/c-runtime-library/secure-template-overloads
     defines += [
       "_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES"
     ]
-    cflags += [ "/permissive-", ]
+    if (is_clang || msc_full_ver >= 191000000) {
+      cflags += [ "/permissive-", ]
+    }
   }
 
   # Defines that set up the Windows SDK.
