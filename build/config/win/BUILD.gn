@@ -46,6 +46,9 @@ declare_args() {
   # the static runtime (i.e. /MD instead of /MT). Static runtime
   # is the default so that standalone .exes "just work".
   use_dynamic_crt = false
+
+  # Whether to use the /SAFESEH asm and linker flags
+  use_safeseh = false
 }
 
 if (is_win8_build) {
@@ -62,7 +65,7 @@ if (is_win8_build) {
 # is applied to all targets. It is here to separate out the logic that is
 # Windows-only.
 config("compiler") {
-  if (current_cpu == "x86") {
+  if (current_cpu == "x86" && use_safeseh) {
     asmflags = [
       # When /safeseh is specified, the linker will only produce an image if it
       # can also produce a table of the image's safe exception handlers. This
@@ -272,7 +275,8 @@ config("runtime_library") {
     # Rename certain functions with _s suffixes for secure Win32 equivalents.
     # See https://learn.microsoft.com/en-us/cpp/c-runtime-library/secure-template-overloads
     defines += [
-      "_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES"
+      "_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES",
+      "_SECURE_ATL",
     ]
     if (is_clang || msc_full_ver >= 191000000) {
       cflags += [ "/permissive-", ]
@@ -284,7 +288,6 @@ config("runtime_library") {
     "WIN32",
     "_WIN32",
     "PSAPI_VERSION=$psapi_version",
-    "_SECURE_ATL",
   ]
 
   if (current_cpu == "x64" || current_cpu == "arm64") {
@@ -294,7 +297,7 @@ config("runtime_library") {
     ]
   }
 
-  if (!use_vs_code_analysis || use_legacy_toolchain) {
+  if (!use_vs_code_analysis && use_legacy_toolchain) {
     # This is required for ATL to use XP-safe versions of its functions.
     # However it is prohibited when using /analyze
     defines += [
@@ -360,16 +363,22 @@ config("default_libs") {
       "dloadhelper.lib",
       "WindowsApp.lib",
     ]
-  } else {
-    # These libraries are not compatible with Windows UWP (i.e. store apps.)
-    libs += [
-      #"libnt5.lib",
-      #"delayimp.lib",
-      "kernel32.lib",
+  } else if (is_win2k_build) {
+    defines = [ "_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING", ]
+    ldflags = [
+      "/NODEFAULTLIB",
     ]
-    # Common libs most apps would want
+
+    # Must keep in this order to link in libnt5.lib first
+    # to ensure import library imports our spoofed kernel functions first.
+    libs += [
+      "libnt5.lib",
+      "kernel32.lib",
+      "kernel32legacylib.lib",
+    ]
     libs += [
       "advapi32.lib",
+      "bcrypt.lib",
       "comctl32.lib", # We may not want to use Comctl32.dll
       "comdlg32.lib",
       "dbghelp.lib",
@@ -387,8 +396,65 @@ config("default_libs") {
       "uxtheme.lib",
       "version.lib",
       "winspool.lib",
-      #"vdmdbg.lib",
     ]
+    if (is_debug) {
+      libs += [
+        "libcmtd.lib",
+        "libvcruntimed.lib",
+        "libucrtd.lib",
+        "libconcrtd.lib",
+        "libconcrtd0.lib",
+        "libconcrtd1.lib",
+        "libcpmtd.lib",
+        "libcpmtd0.lib",
+        "libcpmtd1.lib",
+      ]
+    } else {
+      libs += [
+        "libcmt.lib",
+        "libvcruntime.lib",
+        "libucrt.lib",
+        "libconcrt.lib",
+        "libconcrt0.lib",
+        "libconcrt1.lib",
+        "libcpmt.lib",
+        "libcpmt1.lib",
+      ]
+    }
+  } else {
+    # These libraries are not compatible with Windows UWP (i.e. store apps.)
+    libs += [
+      "delayimp.lib",
+      "kernel32.lib",
+    ]
+    if (use_legacy_toolchain) {
+      libs += [ "kernel32legacylib.lib", ]
+    }
+    # Common libs most apps would want
+    libs += [
+      "advapi32.lib",
+      "bcrypt.lib",
+      "comctl32.lib", # We may not want to use Comctl32.dll
+      "comdlg32.lib",
+      "dbghelp.lib",
+      "gdi32.lib",
+      "htmlhelp.lib",
+      "mpr.lib",
+      "ntdll.lib",
+      "ole32.lib",
+      "oleaut32.lib",
+      "secur32.lib",
+      "shell32.lib",
+      "shlwapi.lib",
+      "user32.lib",
+      "uuid.lib",
+      "uxtheme.lib",
+      "version.lib",
+      "winspool.lib",
+    ]
+    if (current_cpu == "x86") {
+      libs += [ "vdmdbg.lib", ]
+    }
     if (!is_win2k_build) {
       libs += [ "psapi.lib", ] # Windows 2000 doesn't have PSAPI
     }
@@ -466,9 +532,14 @@ config("common_linker_setup") {
   if (current_cpu == "x86") {
     ldflags = [
       "/MACHINE:X86",
-      "/SAFESEH",  # Not compatible with x64 so use only for x86.
       "/largeaddressaware",
     ]
+    # Not compatible with x64 so use only for x86.
+    if (use_safeseh) {
+      ldflags += [ "/SAFESEH", ]
+    } else {
+      ldflags += [ "/SAFESEH:NO", ]
+    }
   } else if (current_cpu == "x64") {
     ldflags = [ "/MACHINE:X64" ]
   } else if (current_cpu == "arm") {

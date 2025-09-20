@@ -1,0 +1,15 @@
+9/01 - 9/15 Pay Cycle
+---------------------------------------------------------
+5.0 - Update OTPAss and profiles manager
+4.0 - Start clang-format cleanups on Dans code, misc minor fixups for last weeks work
+5.0 - Update most other extensions and finalize canvas for public release by adding flag
+6.0 - prevent loadProfiles from selecting last tab, make installer dialog show version
+5.5 - Bump profiles manager and begin work on fixing ext cleaner in MacOS branch
+3.0 - Fix bug in links modifier content script, get on call with Buu and customer
+6.5 - Fix performance regression in canvas, make builds all day
+5.5 - Better bool handling for static_image_bitmap, make builds for Daniyal all day
+6.0 - Add API Keys for google translate, disable google sync.
+5.0 - Make release build and fix extensions dir issue for customer from me and Buu call earlier in the week
+4.0 - Update profiles manager with my own work for once, to fix text being too light and not positioned correctly
+ x 30 = 
+ 
