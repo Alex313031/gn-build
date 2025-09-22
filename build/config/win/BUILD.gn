@@ -295,6 +295,13 @@ config("runtime_library") {
       "WIN64",
       "_WIN64",
     ]
+    if (current_cpu == "x64") {
+      defines += [
+        "_AMD64_",
+      ]
+    } else if (current_cpu == "arm64") {
+      defines += [ "_ARM64_", ]
+    }
   }
 
   if (!use_vs_code_analysis && use_legacy_toolchain) {
@@ -372,6 +379,7 @@ config("default_libs") {
     # Must keep in this order to link in libnt5.lib first
     # to ensure import library imports our spoofed kernel functions first.
     libs += [
+      # Requires building libnt5 https://github.com/Alex313031/libnt5
       "libnt5.lib",
       "kernel32.lib",
       "kernel32legacylib.lib",
@@ -393,6 +401,8 @@ config("default_libs") {
       "shlwapi.lib",
       "user32.lib",
       "uuid.lib",
+      "odbc32.lib",
+      "odbccp32.lib",
       "uxtheme.lib",
       "version.lib",
       "winspool.lib",
@@ -434,13 +444,16 @@ config("default_libs") {
     libs += [
       "advapi32.lib",
       "bcrypt.lib",
-      "comctl32.lib", # We may not want to use Comctl32.dll
+      "comctl32.lib",
       "comdlg32.lib",
       "dbghelp.lib",
       "gdi32.lib",
       "htmlhelp.lib",
+      "legacy_stdio_definitions.lib",
       "mpr.lib",
       "ntdll.lib",
+      "odbc32.lib",
+      "odbccp32.lib",
       "ole32.lib",
       "oleaut32.lib",
       "secur32.lib",
@@ -464,7 +477,6 @@ config("default_libs") {
     if (!is_win10_build || !is_win11_build) {
       # Many old projects rely on this, new ones shouldn't
       defines = [ "_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING" ]
-      libs += [ "legacy_stdio_definitions.lib", ]
     }
   }
 }

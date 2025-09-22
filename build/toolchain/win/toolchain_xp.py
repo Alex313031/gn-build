@@ -68,10 +68,9 @@ def _ExtractImportantEnvironment(cpuname):
   if cpuname == 'x86':
     env_file = here / 'env_xp_x86.txt'
   elif cpuname == 'x64':
-    #env_file = here / 'env_xp_x64.txt'
-    env_file = here / 'env_xp_x86.txt'
+    env_file = here / 'env_xp_x64.txt'
   else:
-    env_file = here / 'env_xp_x86.txt'
+    raise Exception("This script is only valid on x86 or x64 targets! arm64 won't work")
 
   env = {}
   with open(env_file, "r") as file:
