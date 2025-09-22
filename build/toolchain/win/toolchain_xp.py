@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright 2014 The Chromium Authors. All rights reserved.
+# Copyright 2025 The Chromium Authors and Alex313031
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
@@ -70,7 +70,8 @@ def _ExtractImportantEnvironment(cpuname):
   elif cpuname == 'x64':
     env_file = here / 'env_xp_x64.txt'
   else:
-    raise Exception("This script is only valid on x86 or x64 targets! arm64 won't work")
+    #raise Exception("This script is only valid on x86 or x64 targets! arm64 won't work")
+    env_file = here / 'env_xp_x86.txt'
 
   env = {}
   with open(env_file, "r") as file:
