@@ -1,3 +1,6 @@
 [submodule "src/picalc_win"]
 	path = src/picalc_win
 	url = https://github.com/Alex313031/PiCalc-Win
+[submodule "src/libnt5"]
+	path = src/libnt5
+	url = https://github.com/Alex313031/libnt5.git
