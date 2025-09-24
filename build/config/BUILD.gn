@@ -450,6 +450,78 @@ config("compiler_cpu_abi") {
         "-msse2",
       ]
       ldflags += [ "-m64", "-march=x86-64", ]
+      if (use_sse3) {
+        cflags += [ "-msse3", ]
+        ldflags += [ "-msse3", ]
+      }
+      if (use_sse41) {
+        cflags += [
+          "-mssse3",
+          "-msse4.1",
+        ]
+        ldflags += [
+          "-mssse3",
+          "-msse4.1",
+        ]
+      }
+      if (use_sse42) {
+        cflags += [ "-msse4.2", ]
+        ldflags += [ "-msse4.2", ]
+      }
+      if (use_avx) {
+        cflags += [
+          "-mpclmul",
+          "-maes",
+          "-mavx",
+        ]
+        ldflags += [
+          "-mpclmul",
+          "-maes",
+          "-mavx",
+        ]
+      }
+      if (use_avx2) {
+        cflags += [
+          "-mavx2",
+          "-mfma",
+          "-mf16c",
+          "-mlzcnt",
+          "-mbmi2",
+        ]
+        ldflags += [
+          "-mavx2",
+          "-mfma",
+          "-mf16c",
+          "-mlzcnt",
+          "-mbmi2",
+        ]
+      }
+      if (use_fma) {
+        cflags += [
+          "-mfma",
+          "-ffp-contract=fast",
+        ]
+        ldflags += [
+          "-mfma",
+          "-Wl,-mllvm,-fp-contract=fast",
+        ]
+      }
+      if (use_avx512) {
+        cflags += [
+          "-mavx512f",
+          "-mavx512cd",
+          "-mavx512vl",
+          "-mavx512bw",
+          "-mavx512dq",
+        ]
+        ldflags += [
+          "-mavx512f",
+          "-mavx512cd",
+          "-mavx512vl",
+          "-mavx512bw",
+          "-mavx512dq",
+        ]
+      }
     } else if (current_cpu == "x86") {
       cflags += [ "-m32" ]
       cflags += [
@@ -459,7 +531,28 @@ config("compiler_cpu_abi") {
         "-msse",
         "-msse2",
       ]
-      ldflags += [ "-m32", "-march=pentium4", ]
+      ldflags += [ "-m32", ]
+      if (use_sse2 && !use_sse3) {
+        ldflags += [ "-march=pentium4", ]
+      }
+      if (use_sse3) {
+        cflags += [ "-msse3", ]
+        ldflags += [ "-msse3", ]
+      }
+      if (use_sse41) {
+        cflags += [
+          "-mssse3",
+          "-msse4.1",
+        ]
+        ldflags += [
+          "-mssse3",
+          "-msse4.1",
+        ]
+      }
+      if (use_sse42) {
+        cflags += [ "-msse4.2", ]
+        ldflags += [ "-msse4.2", ]
+      }
     } else if (current_cpu == "arm") {
       if (is_clang && !is_android) {
         cflags += [ "--target=arm-linux-gnueabihf" ]

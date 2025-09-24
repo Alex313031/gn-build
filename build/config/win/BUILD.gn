@@ -108,6 +108,7 @@ config("compiler") {
   if (is_clang) {
     # Required to make the 19041 SDK compatible with clang-cl.
     # See https://crbug.com/1089996 issue #2 for details.
+    defines = [ "__clang__" ]
     cflags += [ "/D__WRL_ENABLE_FUNCTION_STATICS__" ]
 
     # Don't warn about Microsoft specific header stuff
@@ -155,6 +156,24 @@ config("compiler") {
     } else {
       cflags += [ "/arch:SSE2", ]
     }
+    if (use_sse3) {
+      if (is_clang) {
+        cflags += [ "-msse3", ]
+      }
+    }
+    if (use_sse41) {
+      if (is_clang) {
+        cflags += [
+          "-mssse3",
+          "-msse4.1",
+        ]
+      }
+    }
+    if (use_sse42) {
+      if (is_clang) {
+        cflags += [ "-msse4.2", ]
+      }
+    }
   }
 
   # 64 bit SIMD level
@@ -166,7 +185,75 @@ config("compiler") {
         "-msse",
         "-msse2"
       ]
-    } else {
+    }
+    if (use_sse3) {
+      if (is_clang) {
+        cflags += [ "-msse3", ]
+      }
+    }
+    if (use_sse41) {
+      if (is_clang) {
+        cflags += [
+          "-mssse3",
+          "-msse4.1",
+        ]
+      }
+    }
+    if (use_sse42) {
+      if (is_clang) {
+        cflags += [ "-msse4.2", ]
+      } else {
+        if (msc_full_ver >= 191125506) {
+          cflags += [ "/arch:SSE4.2", ]
+        }
+      }
+    }
+    if (use_avx) {
+      if (is_clang) {
+        cflags += [
+          "-mpclmul",
+          "-maes",
+          "-mavx",
+        ]
+      } else {
+        cflags += [ "/arch:AVX", ]
+      }
+    }
+    if (use_avx2) {
+      if (is_clang) {
+        cflags += [
+          "-mavx2",
+          "-mfma",
+          "-mf16c",
+          "-mlzcnt",
+          "-mbmi2",
+        ]
+      } else {
+        cflags += [ "/arch:AVX2", ]
+      }
+    }
+    if (use_fma) {
+      if (is_clang) {
+        cflags += [
+          "-mfma",
+          "/clang:-ffp-contract=fast",
+        ]
+      } else {
+        if (!strict_mode && msc_full_ver >= 190000000) {
+          cflags += [ "/fp:fast", ]
+        }
+      }
+    }
+    if (use_avx512) {
+      if (is_clang) {
+        cflags += [
+          "-mavx512f",
+          "-mavx512cd",
+          "-mavx512vl",
+          "-mavx512bw",
+          "-mavx512dq",
+        ]
+      }
     }
   }
 
@@ -290,18 +377,23 @@ config("runtime_library") {
     "PSAPI_VERSION=$psapi_version",
   ]
 
+  if (current_cpu == "x86") {
+    defines += [ "_X86_" ]
+  } else if (current_cpu == "x64") {
+    defines += [ "_AMD64_", ]
+  } else if (current_cpu == "arm64") {
+    defines += [ "_ARM64_", ]
+  }
+
   if (current_cpu == "x64" || current_cpu == "arm64") {
     defines += [
       "WIN64",
       "_WIN64",
     ]
-    if (current_cpu == "x64") {
-      defines += [
-        "_AMD64_",
-      ]
-    } else if (current_cpu == "arm64") {
-      defines += [ "_ARM64_", ]
-    }
+  }
+
+  if (use_libnt5) {
+    defines += [ "USING_LIBNT5" ]
   }
 
   if (!use_vs_code_analysis && use_legacy_toolchain) {
@@ -370,7 +462,7 @@ config("default_libs") {
       "dloadhelper.lib",
       "WindowsApp.lib",
     ]
-  } else if (is_win2k_build) {
+  } else if (is_win2k_build || use_libnt5) {
     defines = [ "_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING", ]
     ldflags = [
       "/NODEFAULTLIB",
@@ -378,9 +470,13 @@ config("default_libs") {
 
     # Must keep in this order to link in libnt5.lib first
     # to ensure import library imports our spoofed kernel functions first.
+    # Requires building libnt5 https://github.com/Alex313031/libnt5
+    if (use_libnt5) {
+      libs += [
+        "libnt5.lib",
+      ]
+    }
     libs += [
-      # Requires building libnt5 https://github.com/Alex313031/libnt5
-      "libnt5.lib",
       "kernel32.lib",
       "kernel32legacylib.lib",
     ]
