@@ -392,10 +392,6 @@ config("runtime_library") {
     ]
   }
 
-  if (use_libnt5) {
-    defines += [ "USING_LIBNT5" ]
-  }
-
   if (!use_vs_code_analysis && use_legacy_toolchain) {
     # This is required for ATL to use XP-safe versions of its functions.
     # However it is prohibited when using /analyze

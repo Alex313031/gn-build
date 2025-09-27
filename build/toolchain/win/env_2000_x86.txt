@@ -1,0 +1,10 @@
+INCLUDE=C:\repos\gn-build\tools\v90_sdk_archive\winsdk\include;C:\repos\gn-build\tools\v90_sdk_archive\msvcrt\include;C:\repos\gn-build\tools\v90_sdk_archive\msvcrt\atlmfc\include
+LIB=C:\repos\gn-build\tools\v90_sdk_archive\winsdk\lib;C:\repos\gn-build\tools\v90_sdk_archive\msvcrt\lib;C:\repos\gn-build\tools\v90_sdk_archive\msvcrt\atlmfc\lib
+LIBPATH=C:\repos\gn-build\tools\v90_sdk_archive\winsdk\lib;C:\repos\gn-build\tools\v90_sdk_archive\msvcrt\lib;C:\repos\gn-build\tools\v90_sdk_archive\msvcrt\atlmfc\lib
+PATH=C:\repos\gn-build\tools\v90_sdk_archive\msvcrt\bin\x86_amd64;C:\repos\gn-build\tools\v90_sdk_archive\winsdk\bin;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\VC\VCPackages;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\;C:\Python39\Scripts\;C:\Python39\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\Git\cmd
+PATHEXT=.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC;.PY;.PYW
+SYSTEMROOT=C:\Windows
+TEMP=C:\Users\Alex\AppData\Local\Temp
+TMP=C:\Users\Alex\AppData\Local\Temp
+UCRTVersion=10.0.10240.0
+WINDOWSSDKDIR=C:\repos\gn-build\tools\v90_sdk_archive\winsdk
