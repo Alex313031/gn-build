@@ -1,3 +1,6 @@
+// framework.h : include file for standard system include files,
+// or project specific include files and libs
+
 #pragma once
 
 #ifndef FRAMEWORK_H_
@@ -6,14 +9,14 @@
 #include "targetver.h"
 
 // Exclude rarely-used stuff from Windows headers
-#ifdef _CONSOLE
+#ifdef WIN32_LEAN_AND_MEAN
  #define WIN32_LEAN_AND_MEAN
-#endif  // _CONSOLE
+#endif  // WIN32_LEAN_AND_MEAN
 
 // To allow std::min and std::max
 // instead of MIN/MAX macros
 #ifndef NOMINMAX
- #define NOMINMAX
+ //#define NOMINMAX
 #endif  // NOMINMAX
 
 // Allow old C++ standards and insecure functions
@@ -38,6 +41,10 @@
 // Fail early if _WINDOWS isn't defined, since this is a GUI Win32 app
 #ifdef _WINDOWS // Test to make sure we compiled this as a GUI app
  #include <windows.h>
+ #include <tchar.h>
+ #ifdef USING_COMMON_CONTROLS
+  #include <commctrl.h>
+ #endif  // USING_COMMON_CONTROLS
 #endif  // _WINDOWS
 
 // C Runtime Header Files
@@ -47,7 +54,6 @@
 #include <memory.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <tchar.h>
 #include <time.h>
 
 #endif  // FRAMEWORK_H_

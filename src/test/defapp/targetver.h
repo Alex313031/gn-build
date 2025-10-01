@@ -29,7 +29,7 @@
 // See https://tedwvc.wordpress.com/2014/01/01/how-to-target-xp-with-vc2012-or-vc2013-and-continue-to-use-the-windows-8-x-sdk/
 //#define _USING_V110_SDK71_
 #ifndef _ATL_XP_TARGETING
-#define _ATL_XP_TARGETING
+ #define _ATL_XP_TARGETING
 #endif  // _ATL_XP_TARGETING
 
 // Include this AFTER defining the minimum WINNT version you want

@@ -10,13 +10,11 @@
 #define MAX_LOADSTRING 100
 
 // Global Variables:
-HINSTANCE hInst;  // current instance
+extern HINSTANCE hInst;  // current instance
 
 static TCHAR szTitle[MAX_LOADSTRING];  // The title bar text
 
 static TCHAR szWindowClass[MAX_LOADSTRING];  // the main window class name
-
-static WNDCLASSEXW wcex;  // WNDCLASS structure
 
 static FILE* fDummyFile;  // Dummy file pointer for console output
 

@@ -1,6 +1,9 @@
 // defapp.cc : Defines the entry point for the application.
 
+#include "framework.h"
 #include "defapp.h"
+
+HINSTANCE hInst; // Global hinstance
 
 // Forward declarations of functions included in this code module:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -8,15 +11,17 @@ BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
-int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
-                       _In_opt_ HINSTANCE hPrevInstance,
-                       _In_ LPTSTR    lpCmdLine,
-                       _In_ int       nCmdShow)
+int APIENTRY _tWinMain(HINSTANCE hInstance,
+                       HINSTANCE hPrevInstance,
+                       LPTSTR    lpCmdLine,
+                       int       nCmdShow)
 {
     UNREFERENCED_PARAMETER(hPrevInstance);
-    UNREFERENCED_PARAMETER(lpCmdLine);
 
-    // TODO: Place code here.
+#ifdef USING_COMMON_CONTROLS
+    // Import Comctl32.dll explicitly
+    InitCommonControls();
+#endif // USING_COMMON_CONTROLS
 
     // Initialize global strings
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
@@ -55,6 +60,9 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 //
 ATOM MyRegisterClass(HINSTANCE hInstance)
 {
+    // WNDCLASS structure
+    WNDCLASSEXW wcex;
+
     wcex.cbSize = sizeof(WNDCLASSEX);
 
     wcex.style          = CS_HREDRAW | CS_VREDRAW;
@@ -88,7 +96,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
    HWND hWnd = CreateWindowExW(WS_EX_RIGHTSCROLLBAR, szWindowClass,
                                szTitle, WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, CW_USEDEFAULT, 640, 480, nullptr, nullptr, hInstance, nullptr);
+                               CW_USEDEFAULT, CW_USEDEFAULT,
+                               640, 480, nullptr, nullptr, hInstance, nullptr);
 
    if (!hWnd)
    {
