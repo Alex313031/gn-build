@@ -4,13 +4,23 @@
 
 #define IDS_APP_TITLE                 103
 
+// Main
 #define IDR_MAINFRAME                 128
-#define IDD_DEFAPP_DIALOG             102
-#define IDD_ABOUTBOX                  103
+
+// Icons
+#define IDI_DEFAPP                    101
+#define IDI_SMALL                     102
+
+// Menu items
 #define IDM_ABOUT                     104
 #define IDM_EXIT                      105
-#define IDI_DEFAPP                    107
-#define IDI_SMALL                     108
+#define IDM_TEST                      106
+
+// Dialogs
+#define IDD_DEFAPP_DIALOG             107
+#define IDD_ABOUTBOX                  IDS_APP_TITLE // Make about dialog a child of this window
+
+// Controls
 #define IDC_DEFAPP                    109
 #define IDC_MYICON                    2
 #define MAX_ID                        255
