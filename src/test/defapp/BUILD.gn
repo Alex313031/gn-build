@@ -1,21 +1,56 @@
+import("//build/config/precompiled_header.gni")
+import("//build/config/static_shared.gni")
+import("//build/config/win/manifest.gni")
+
 # MSVS GUI Default GUI App
-# A minimal Windowed app for testing compiler flags
+# A minimal Windowed app for testing compiler flags and Windows versioning/targeting support
 executable("defapp") {
   configs -= [ "//build/config/win:console", ]
-  configs += [ "//build/config/win:windowed", ]
+  configs += [
+    "//build/config/win:windowed",
+    ":defapp_config",
+  ]
 
-  deps = [ ":defapp_sources" ]
+  deps = [
+    ":defapp_sources",
+    ":defapp_manifest",
+  ]
 }
 
+# Testing source set to be used for executable picks up correct flags
 source_set("defapp_sources") {
   # Must explicitly set this for sources
-  configs += [ "//build/config/win:windowed", ]
+  configs += [
+    "//build/config/win:windowed",
+    ":defapp_config",
+  ]
   sources = [
-    "resource.h",
-    "targetver.h",
-    "framework.h",
-    "defapp.rc",
     "defapp.cc",
     "defapp.h",
+    "defapp.rc",
+    "framework.h",
+    "resource.h",
+    "targetver.h",
   ]
+}
+
+# Specific configs for this program
+config("defapp_config") {
+  if (use_libnt5) {
+    configs = [
+      "//src/libnt5:libnt5_public_config",
+    ]
+  }
+
+  libs = [
+  ]
+}
+
+# Regular manifests
+windows_manifest("defapp_manifest") {
+  sources = [ as_invoker_manifest ]
+
+  if (use_common_controls) {
+    sources += [ common_controls_manifest, ]
+  }
 }
