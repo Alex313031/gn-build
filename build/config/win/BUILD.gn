@@ -450,7 +450,11 @@ config("runtime_library") {
 }
 
 config("default_libs") {
+  defines = []
   libs = []
+  if (use_common_controls) {
+    defines += [ "USING_COMMON_CONTROLS", ]
+  }
   if (current_os == "winuwp") {
     # These libraries are needed for Windows UWP (i.e. store apps).
     # https://docs.microsoft.com/en-us/uwp/win32-and-com/win32-apis
@@ -459,7 +463,7 @@ config("default_libs") {
       "WindowsApp.lib",
     ]
   } else if (is_win2k_build || use_libnt5) {
-    defines = [ "_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING", ]
+    defines += [ "_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING", ]
     ldflags = [
       "/NODEFAULTLIB",
     ]
@@ -568,7 +572,7 @@ config("default_libs") {
     }
     if (!is_win10_build || !is_win11_build) {
       # Many old projects rely on this, new ones shouldn't
-      defines = [ "_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING" ]
+      defines += [ "_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING" ]
     }
   }
 }

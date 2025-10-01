@@ -9,4 +9,4 @@
 
 *.sh text eol=lf
 
-*.rc text working-tree-encoding=UTF-8
+*.rc text eol=crlf
